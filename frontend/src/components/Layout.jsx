@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
             {children}
           </main>
           <footer className="border-t border-gray-800/50 py-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Crypto Tracker Pro.
+            &copy; {new Date().getFullYear()} CryptoPulse.
           </footer>
       </div>
     </div>

@@ -36,8 +36,51 @@ export const apiService = {
       return { data: response.data };
     } catch (error) {
       console.error('Błąd pobierania danych z CoinGecko:', error);
-      // Fallback in case of rate limiting (429) or other errors
       throw new Error('Nie udało się pobrać danych z rynku. Spróbuj ponownie później.');
+    }
+  },
+
+  getMarketChart: async (id, days = 7) => {
+    try {
+       const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart`, {
+         params: { vs_currency: 'usd', days }
+       });
+       return { data: response.data };
+    } catch (error) {
+       console.error(`Błąd pobierania wykresu dla ${id}:`, error);
+       throw new Error('Nie udało się pobrać wykresu cenowego.');
+    }
+  },
+
+  getExchanges: async (page = 1) => {
+    try {
+      const response = await axios.get('https://api.coingecko.com/api/v3/exchanges', {
+        params: { per_page: 100, page }
+      });
+      return { data: response.data };
+    } catch (error) {
+      console.error('Błąd pobierania giełd:', error);
+      throw new Error('Nie udało się pobrać listy giełd.');
+    }
+  },
+
+  getTrending: async () => {
+    try {
+      const response = await axios.get('https://api.coingecko.com/api/v3/search/trending');
+      return { data: response.data.coins };
+    } catch (error) {
+      console.error('Błąd pobierania trendków:', error);
+      throw new Error('Nie udało się pobrać najnowszych trendów.');
+    }
+  },
+
+  getGlobalStats: async () => {
+    try {
+       const response = await axios.get('https://api.coingecko.com/api/v3/global');
+       return { data: response.data.data };
+    } catch (error) {
+       console.error('Błąd pobierania statystyk globalnych:', error);
+       throw new Error('Nie udało się pobrać danych globalnych.');
     }
   },
 

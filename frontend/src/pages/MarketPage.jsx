@@ -82,7 +82,7 @@ const MarketPage = () => {
       {/* Hero Section / Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
         <div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">Rynek <span className="text-crypto-primary text-glow-primary">Krypto</span></h1>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">Crypto<span className="text-crypto-primary text-glow-primary">Pulse</span></h1>
           <p className="text-gray-400 text-lg">Aktualne kursy i notowania największych walut</p>
         </div>
         

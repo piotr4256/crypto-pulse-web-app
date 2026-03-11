@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { ArrowLeft, Star, TrendingUp, TrendingDown, Activity, DollarSign, Layers, PieChart, Info } from 'lucide-react';
+import { ArrowLeft, Star, TrendingUp, TrendingDown, Activity, DollarSign, Layers, PieChart, Info, BarChart2 } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format } from 'date-fns';
+import { apiService } from '../api/apiService';
 
 const CryptoDetailPage = () => {
   const { id } = useParams();
@@ -19,6 +22,36 @@ const CryptoDetailPage = () => {
       setCoin(foundCoin || null);
     }
   }, [marketData, id]);
+
+  const [chartData, setChartData] = useState([]);
+  const [isChartLoading, setIsChartLoading] = useState(true);
+  const [timeframe, setTimeframe] = useState(7);
+
+  useEffect(() => {
+    const fetchChart = async () => {
+      setIsChartLoading(true);
+      try {
+        const res = await apiService.getMarketChart(id, timeframe); // dynamiczne dni
+        
+        let xFormat = 'dd MMM';
+        if (timeframe === 1) xFormat = 'HH:mm';
+        if (timeframe === 365) xFormat = 'MMM yyyy';
+
+        const formattedData = res.data.prices.map(item => ({
+             time: item[0], // timestamp z coingecko
+             dateLabelX: format(new Date(item[0]), xFormat), // dynamiczny format Osi X
+             dateLabelTooltip: format(new Date(item[0]), 'dd MMM HH:mm'), // szczegółowe dla myszki
+             price: item[1]
+        }));
+        setChartData(formattedData);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsChartLoading(false);
+      }
+    };
+    if (id) fetchChart();
+  }, [id, timeframe]);
 
   if (isLoading || (marketData.length === 0 && !coin)) {
     return (
@@ -45,9 +78,26 @@ const CryptoDetailPage = () => {
   const isUpATL = coin.atl_change_percentage >= 0;
   const isFaved = watchlist.includes(coin.id);
 
+  const isChartUp = chartData.length > 0
+    ? chartData[chartData.length - 1].price >= chartData[0].price
+    : isUp24h;
+
   const formatCurrency = (val) => {
      if (val === null || val === undefined) return 'Brak Danych';
-     return '$' + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+     
+     // Specjalny przypadek dla malenkich wartosci (np. shiba inu, dogecoin)
+     if (Math.abs(val) < 0.01 && val !== 0) {
+        return '$' + val.toLocaleString(undefined, { 
+            minimumFractionDigits: 2, 
+            maximumSignificantDigits: 3 
+        });
+     }
+     
+     // Standardowe formatowanie (2 miejsca po przecinku)
+     return '$' + val.toLocaleString(undefined, { 
+         minimumFractionDigits: 2, 
+         maximumFractionDigits: 2 
+     });
   };
 
   const handleStarClick = () => {
@@ -65,7 +115,7 @@ const CryptoDetailPage = () => {
       <div className="flex items-center justify-between">
         <Link to="/" className="flex items-center text-crypto-primary hover:text-crypto-primary/70 transition-colors">
           <ArrowLeft size={20} className="mr-2" />
-          Wróć do rankingu
+          Wróć na Rynek
         </Link>
         <button 
            onClick={handleStarClick}
@@ -108,6 +158,89 @@ const CryptoDetailPage = () => {
                 </div>
             </div>
         </div>
+      </div>
+
+      {/* Wykres Historyczny */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-12 mb-4 gap-4">
+         <h2 className="text-2xl font-bold text-white flex items-center">
+            <BarChart2 className="mr-3 text-crypto-primary" /> Wykres Historyczny
+         </h2>
+         <div className="flex bg-gray-900/50 rounded-lg p-1 border border-gray-800 self-start sm:self-auto">
+            {[
+              { label: '24h', value: 1 },
+              { label: '7D', value: 7 },
+              { label: '30D', value: 30 },
+              { label: '1Y', value: 365 },
+            ].map(tf => (
+               <button
+                  key={tf.value}
+                  onClick={() => setTimeframe(tf.value)}
+                  className={`px-4 py-1.5 text-sm font-bold rounded-md transition-all ${timeframe === tf.value ? 'bg-crypto-primary text-gray-900 shadow-[0_0_10px_rgba(0,212,255,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+               >
+                  {tf.label}
+               </button>
+            ))}
+         </div>
+      </div>
+      <div className="card p-4 sm:p-6 w-full h-[400px] border border-crypto-primary/10">
+        {isChartLoading ? (
+           <div className="w-full h-full flex items-center justify-center">
+             <div className="w-8 h-8 border-2 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+           </div>
+        ) : chartData.length > 0 ? (
+           <ResponsiveContainer width="100%" height="100%">
+             <AreaChart data={chartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+               <defs>
+                 <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                   {isChartUp 
+                      ? <><stop offset="5%" stopColor="#00E676" stopOpacity={0.8}/><stop offset="95%" stopColor="#00E676" stopOpacity={0}/></>
+                      : <><stop offset="5%" stopColor="#ff4d4f" stopOpacity={0.8}/><stop offset="95%" stopColor="#ff4d4f" stopOpacity={0}/></>
+                   }
+                 </linearGradient>
+               </defs>
+               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+               <XAxis 
+                  dataKey="dateLabelX" 
+                  stroke="rgba(255,255,255,0.3)" 
+                  tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} 
+                  tickMargin={12}
+                  minTickGap={45}
+               />
+               <YAxis 
+                  domain={['auto', 'auto']} 
+                  stroke="rgba(255,255,255,0.3)" 
+                  tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}}
+                  tickFormatter={(val) => '$' + val.toLocaleString()}
+                  width={80}
+                  orientation="right"
+               />
+               <Tooltip 
+                  contentStyle={{ backgroundColor: 'rgba(11, 15, 25, 0.95)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '12px', boxShadow: '0 0 20px rgba(0, 212, 255, 0.2)' }}
+                  itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+                  labelStyle={{ color: '#00d4ff', marginBottom: '4px' }}
+                  formatter={(value) => [formatCurrency(value), 'Cena']}
+                  labelFormatter={(_label, payload) => {
+                     if (payload && payload.length > 0) {
+                        return payload[0].payload.dateLabelTooltip;
+                     }
+                     return _label;
+                  }}
+               />
+               <Area 
+                  type="monotone" 
+                  dataKey="price" 
+                  stroke={isChartUp ? '#00E676' : '#ff4d4f'} 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorPrice)" 
+               />
+             </AreaChart>
+           </ResponsiveContainer>
+        ) : (
+           <div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
+             Brak danych wykresu dla tej pory.
+           </div>
+        )}
       </div>
 
       {/* Siatka Statystyk */}

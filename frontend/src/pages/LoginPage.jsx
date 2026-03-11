@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Mail } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { login, isLoading, error } = useStore();
   const navigate = useNavigate();
 
@@ -52,13 +53,20 @@ const LoginPage = () => {
           <div className="relative">
             <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               placeholder="Hasło" 
-              className="input-field pl-11"
+              className="input-field pl-11 pr-11"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-gray-400 hover:text-crypto-primary transition-colors focus:outline-none"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           <button 

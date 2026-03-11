@@ -5,11 +5,13 @@ export const useStore = create((set, get) => ({
   user: null,
   watchlist: [],
   marketData: [],
+  exchanges: [],
+  trending: [],
+  globalStats: null,
   isLoading: false,
   error: null,
 
   fetchMarketData: async () => {
-    // Zapobiegaj ponownemu pobieraniu jeśli dane już są (prosty cache) lub pobiera
     const { marketData, isLoading } = get();
     if (marketData.length > 0 || isLoading) return;
     
@@ -19,6 +21,35 @@ export const useStore = create((set, get) => ({
       set({ marketData: res.data, isLoading: false });
     } catch (err) {
       set({ error: err.message, isLoading: false });
+    }
+  },
+
+  fetchExchanges: async () => {
+    const { exchanges, isLoading } = get();
+    if (exchanges.length > 0 || isLoading) return;
+    
+    set({ isLoading: true, error: null });
+    try {
+      const res = await apiService.getExchanges(1);
+      set({ exchanges: res.data, isLoading: false });
+    } catch (err) {
+      set({ error: err.message, isLoading: false });
+    }
+  },
+
+  fetchTrendingAndGlobal: async () => {
+    const { trending, globalStats, isLoading } = get();
+    if ((trending.length > 0 && globalStats) || isLoading) return;
+
+    set({ isLoading: true, error: null });
+    try {
+        const [trendRes, globRes] = await Promise.all([
+           apiService.getTrending(),
+           apiService.getGlobalStats()
+        ]);
+        set({ trending: trendRes.data, globalStats: globRes.data, isLoading: false });
+    } catch(err) {
+        set({ error: err.message, isLoading: false });
     }
   },
 

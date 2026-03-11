@@ -19,13 +19,19 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2 text-crypto-primary hover:text-blue-400 transition-colors">
           <Activity size={24} className="animate-pulse" />
-          <span className="font-bold text-xl tracking-wide text-white">Crypto<span className="text-crypto-primary">UI</span></span>
+          <span className="font-bold text-xl tracking-wide text-white">Crypto<span className="text-crypto-primary">Pulse</span></span>
         </Link>
 
         {/* Links */}
         <div className="flex items-center space-x-6">
           <Link to="/" className="text-gray-300 hover:text-white transition-colors font-medium text-sm">
             Rynek
+          </Link>
+          <Link to="/exchanges" className="text-gray-300 hover:text-white transition-colors font-medium text-sm">
+            Giełdy
+          </Link>
+          <Link to="/trending" className="text-gray-300 hover:text-white transition-colors font-medium text-sm">
+            Trendy
           </Link>
           {user && (
             <Link to="/watchlist" className="text-gray-300 hover:text-white transition-colors font-medium text-sm">
