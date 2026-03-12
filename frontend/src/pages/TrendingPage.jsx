@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useNavigate } from 'react-router-dom';
 import { TrendingUp, TrendingDown, Globe, Activity, Flame } from 'lucide-react';
+import GlareHover from '../components/GlareHover';
 
 const TrendingPage = () => {
   const { trending, globalStats, fetchTrendingAndGlobal, isLoading, error } = useStore();
@@ -46,21 +47,33 @@ const TrendingPage = () => {
         </h1>
         {globalStats ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-primary hover:-translate-y-1 transition-transform">
+            <GlareHover
+              className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-primary hover:-translate-y-1 transition-transform h-auto"
+              glareColor="#00d4ff"
+              glareOpacity={0.15}
+            >
               <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-2">Całkowita Kapitalizacja</p>
               <p className="text-3xl font-black text-white">{formatLargeDecimal(globalStats.total_market_cap?.usd)}</p>
               <p className="text-sm text-crypto-primary mt-2 flex items-center"><Activity size={14} className="mr-1" /> Zmiana 24h: {globalStats.market_cap_change_percentage_24h_usd?.toFixed(2)}%</p>
-            </div>
-            <div className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-yellow hover:-translate-y-1 transition-transform">
+            </GlareHover>
+            <GlareHover
+              className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-yellow hover:-translate-y-1 transition-transform h-auto"
+              glareColor="#ffb300"
+              glareOpacity={0.15}
+            >
               <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-2">Dominacja Rynkowa</p>
               <p className="text-3xl font-black text-white">{globalStats.market_cap_percentage?.btc?.toFixed(1)}% <span className="text-lg text-gray-400 font-medium">BTC</span></p>
               <p className="text-sm text-crypto-yellow mt-2 flex items-center"><Activity size={14} className="mr-1" /> ETH: {globalStats.market_cap_percentage?.eth?.toFixed(1)}%</p>
-            </div>
-            <div className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-green hover:-translate-y-1 transition-transform">
+            </GlareHover>
+            <GlareHover
+              className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-green hover:-translate-y-1 transition-transform h-auto"
+              glareColor="#10b981"
+              glareOpacity={0.15}
+            >
               <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-2">Aktywne Kryptowaluty</p>
               <p className="text-3xl font-black text-white">{globalStats.active_cryptocurrencies?.toLocaleString()}</p>
               <p className="text-sm text-crypto-green mt-2 flex items-center"><Activity size={14} className="mr-1" /> Śledzonych przez CoinGecko</p>
-            </div>
+            </GlareHover>
           </div>
         ) : (
           <p className="text-gray-500">Brak danych globalnych.</p>
@@ -83,10 +96,13 @@ const TrendingPage = () => {
               const isUp = coin.data?.price_change_percentage_24h?.usd >= 0;
 
               return (
-                <div
+                <GlareHover
                   key={coin.id}
+                  className="card p-5 cursor-pointer hover:scale-[1.03] hover:box-glow-primary transition-all group border border-gray-800/80 relative overflow-hidden h-auto"
+                  glareColor="#00d4ff"
+                  glareOpacity={0.2}
+                  style={{ display: 'block' }}
                   onClick={() => navigate(`/coin/${coin.id}`)}
-                  className="card p-5 cursor-pointer hover:scale-[1.03] hover:box-glow-primary transition-all group border border-gray-800/80 relative overflow-hidden"
                 >
                   <div className="absolute -right-6 -top-6 text-9xl text-gray-900/50 font-black z-0 pointer-events-none group-hover:text-crypto-primary/5 transition-colors">
                     #{coin.market_cap_rank || '?'}
@@ -112,7 +128,7 @@ const TrendingPage = () => {
                       </p>
                     )}
                   </div>
-                </div>
+                </GlareHover>
               );
             })
           ) : (

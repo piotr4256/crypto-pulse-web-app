@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
-
 import AnimatedBackground from './AnimatedBackground';
+import ScrollToTopButton from './ScrollToTopButton';
 
 const Layout = ({ children }) => {
   return (
@@ -16,6 +16,7 @@ const Layout = ({ children }) => {
             &copy; {new Date().getFullYear()} CryptoPulse.
           </footer>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };

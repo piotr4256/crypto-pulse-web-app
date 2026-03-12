@@ -4,7 +4,7 @@ import { ShieldAlert, ShieldCheck, Globe, ArrowUpDown, ArrowUp, ArrowDown } from
 
 const ExchangesPage = () => {
   const { exchanges, fetchExchanges, isLoading, error } = useStore();
-  const [sortConfig, setSortConfig] = useState({ key: 'trade_volume_24h_btc', direction: 'desc' });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'desc' });
 
   useEffect(() => {
     fetchExchanges();

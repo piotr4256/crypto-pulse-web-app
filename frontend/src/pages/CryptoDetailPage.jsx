@@ -127,32 +127,32 @@ const CryptoDetailPage = () => {
       </div>
 
       {/* Hero Karty */}
-      <div className="card p-8 sm:p-12 relative overflow-hidden group border border-crypto-primary/20 hover:border-crypto-primary/50 transition-colors">
+      <div className="card p-6 sm:p-12 relative overflow-hidden group border border-crypto-primary/20 hover:border-crypto-primary/50 transition-colors">
         <div className="absolute top-0 right-0 w-64 h-64 bg-crypto-primary/10 rounded-full blur-[100px] -mr-16 -mt-16 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-crypto-purple/10 rounded-full blur-[100px] -ml-16 -mb-16 pointer-events-none"></div>
         
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-900 border-2 border-crypto-primary/30 p-2 shadow-[0_0_30px_rgba(0,212,255,0.2)]">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+                <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-900 border-2 border-crypto-primary/30 p-2 shadow-[0_0_30px_rgba(0,212,255,0.2)]">
                   {coin.image && <img src={coin.image} alt={coin.name} className="w-full h-full object-contain rounded-full" />}
                 </div>
                 <div>
-                   <div className="flex items-center gap-3 mb-2">
+                   <div className="flex items-center justify-center sm:justify-start gap-3 mb-2">
                        <span className="px-3 py-1 bg-crypto-primary/20 text-crypto-primary text-xs font-bold uppercase rounded-full tracking-wider border border-crypto-primary/30">
                            Rank #{coin.market_cap_rank || '-'}
                        </span>
                        <span className="text-gray-400 font-bold uppercase tracking-widest">{coin.symbol}</span>
                    </div>
-                   <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight drop-shadow-lg">{coin.name}</h1>
+                   <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight drop-shadow-lg">{coin.name}</h1>
                 </div>
             </div>
 
-            <div className="md:text-right">
+            <div className="text-center md:text-right mt-4 md:mt-0">
                 <p className="text-gray-400 text-sm font-medium uppercase tracking-wider mb-2">Aktualna Cena</p>
-                <div className="text-5xl sm:text-6xl font-black text-white drop-shadow-lg mb-4">
+                <div className="text-4xl sm:text-6xl font-black text-white drop-shadow-lg mb-4">
                   {formatCurrency(coin.current_price)}
                 </div>
-                <div className={`inline-flex items-center px-4 py-2 rounded-full text-lg font-bold border ${isUp24h ? 'bg-crypto-green/10 text-crypto-green border-crypto-green/30 text-glow-green' : 'bg-crypto-red/10 text-crypto-red border-crypto-red/30 text-glow-red'}`}>
+                <div className={`inline-flex items-center px-4 py-2 rounded-full text-base sm:text-lg font-bold border ${isUp24h ? 'bg-crypto-green/10 text-crypto-green border-crypto-green/30 text-glow-green' : 'bg-crypto-red/10 text-crypto-red border-crypto-red/30 text-glow-red'}`}>
                   {isUp24h ? <TrendingUp size={24} className="mr-2" /> : <TrendingDown size={24} className="mr-2" />}
                   {isUp24h ? '+' : ''}{coin.price_change_percentage_24h?.toFixed(2)}% (24h)
                 </div>

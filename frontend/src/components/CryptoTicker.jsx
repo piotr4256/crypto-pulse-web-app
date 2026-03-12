@@ -25,7 +25,7 @@ const CryptoTicker = () => {
         
         {/* Pierwszy zestaw */}
         <div className="flex shrink-0 items-center justify-start gap-6 px-3">
-           {tickerData.map((coin, idx) => {
+            {tickerData.map((coin, idx) => {
               const isUp = coin.price_change_percentage_24h >= 0;
               return (
                 <Link key={`first-${coin.id}-${idx}`} to={`/coin/${coin.id}`} className="flex items-center px-4 py-2 space-x-3 hover:bg-white/5 transition-colors cursor-pointer rounded-lg border border-transparent hover:border-gray-800/50">
