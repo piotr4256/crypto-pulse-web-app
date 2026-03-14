@@ -23,7 +23,7 @@ const WatchlistPage = () => {
   const favoriteCryptos = cryptos.filter(c => watchlist.includes(c.id));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">Moja <span className="text-crypto-purple text-glow-purple">Lista</span></h1>

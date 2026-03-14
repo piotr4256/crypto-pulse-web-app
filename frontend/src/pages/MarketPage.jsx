@@ -81,7 +81,7 @@ const MarketPage = () => {
       </div>
 
       {/* Hero Section / Title */}
-      <div className="flex flex-col items-center justify-center relative z-10 px-2 sm:px-0 mb-12 text-center">
+      <div className="flex flex-col items-center justify-center relative z-10 px-2 sm:px-0 mb-12 text-center max-w-6xl mx-auto">
         <AnimatedHeroTitle />
         <p className="text-gray-300 text-lg sm:text-xl md:text-2xl font-medium tracking-wide mt-4">Aktualne kursy i notowania największych walut</p>
       </div>
@@ -90,7 +90,7 @@ const MarketPage = () => {
       <PortfolioSection />
 
       {/* Main Table */}
-      <div className="relative z-10">
+      <div className="relative z-10 max-w-6xl mx-auto">
         <div className="flex flex-col items-center justify-center gap-6 mb-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Wszystkie <span className="text-crypto-green text-glow-green">Kryptowaluty</span>

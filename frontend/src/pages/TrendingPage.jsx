@@ -38,7 +38,7 @@ const TrendingPage = () => {
   }
 
   return (
-    <div className="space-y-12 animate-fade-in antialiased mt-4">
+    <div className="space-y-12 animate-fade-in antialiased mt-4 max-w-6xl mx-auto">
 
       {/* Globalne Statystyki */}
       <div className="mb-12">

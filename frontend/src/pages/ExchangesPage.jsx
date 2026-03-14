@@ -61,7 +61,7 @@ const ExchangesPage = () => {
   return (
     <div className="space-y-12 animate-fade-in antialiased">
       {/* Hero Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10 mb-8 max-w-6xl mx-auto">
         <div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">
             Najlepsze <span className="text-crypto-primary text-glow-primary">Giełdy</span>
@@ -73,7 +73,7 @@ const ExchangesPage = () => {
       </div>
 
       {/* Main Table */}
-      <div className="relative z-10 mt-8">
+      <div className="relative z-10 mt-8 max-w-6xl mx-auto">
         <div className="card overflow-x-auto bg-crypto-card/60 backdrop-blur-xl border border-gray-800/80 hover:box-glow-primary transition-shadow duration-500 rounded-2xl">
           <table className="w-full text-left border-collapse">
             <thead>
