@@ -7,17 +7,23 @@ from .views import (
     ExchangesListView,
     TrendingListView,
     GlobalStatsView,
-    CryptoCurrencyViewSet  # <-- DODANY IMPORT
+    UserWatchlistViewSet,
+    RegisterAPIView,
+    CustomAuthToken
 )
 
 # Router automatycznie tworzy ścieżki dla Twojej bazy (GET, POST, DELETE itp.)
 router = DefaultRouter()
-router.register(r'cryptocurrencies', CryptoCurrencyViewSet, basename='cryptocurrency')
+router.register(r'watchlist', UserWatchlistViewSet, basename='watchlist')
 
 urlpatterns = [
     # Router musi być podpięty pod pusty string lub konkretną ścieżkę
     path('', include(router.urls)), 
     
+    # Autoryzacja
+    path('register/', RegisterAPIView.as_view(), name='register'),
+    path('login/', CustomAuthToken.as_view(), name='login'),
+
     # Twoje dotychczasowe ścieżki proxy
     path('markets/', MarketListView.as_view(), name='market-list'),
     path('coins/<str:coin_id>/', CoinDetailView.as_view(), name='coin-detail'),

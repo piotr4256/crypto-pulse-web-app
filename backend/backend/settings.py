@@ -60,6 +60,7 @@ INSTALLED_APPS = [
 
     # pobrane biblioteki
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'drf_spectacular',
 
@@ -160,6 +161,13 @@ CORS_ALLOW_ALL_ORIGINS = True # Pozwalamy frontendowi na dowolnym porcie/domenie
 # Django REST Framework & Spectacular Configuration
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
 }
 
 SPECTACULAR_SETTINGS = {

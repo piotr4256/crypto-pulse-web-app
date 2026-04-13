@@ -1,24 +1,64 @@
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import viewsets, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import viewsets  
 from drf_spectacular.utils import extend_schema, OpenApiExample
+from django.contrib.auth.models import User
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+
 from .services import CoinGeckoService
-from .models import CryptoCurrency
+from .models import UserWatchlist
 from .serializers import (
     MarketCoinSerializer, 
     CoinDetailSerializer, 
     ExchangeSerializer, 
     TrendingSerializer, 
     GlobalStatsSerializer,
-    CryptoCurrencyModelSerializer
+    UserWatchlistSerializer,
+    RegisterSerializer,
+    UserSerializer
 )
-class CryptoCurrencyViewSet(viewsets.ModelViewSet):
+
+class RegisterAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        # Pobieramy stworzonego usera i generujemy token
+        user = User.objects.get(username=response.data['username'])
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            "token": token.key,
+            "user": UserSerializer(user).data
+        })
+
+class CustomAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user': UserSerializer(user).data
+        })
+
+class UserWatchlistViewSet(viewsets.ModelViewSet):
     """
-    Obsługuje dane z bazy danych Supabase (CRUD).
-    Pod adresem /api/cryptocurrencies/ zobaczysz JSONa z bazy.
+    Obsługuje ulubione kryptowaluty użytkowników (Watchlist).
+    Tylko zalogowani użytkownicy!
     """
-    queryset = CryptoCurrency.objects.all()
-    serializer_class = CryptoCurrencyModelSerializer
+    serializer_class = UserWatchlistSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserWatchlist.objects.filter(user=self.request.user).order_by('-added_at')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 class MarketListView(APIView):
     """
     Pobiera listę top 100 kryptowalut.

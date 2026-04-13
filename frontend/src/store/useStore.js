@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { apiService } from '../api/apiService';
 
 export const useStore = create((set, get) => ({
-  user: null,
+  user: JSON.parse(localStorage.getItem('crypto_pulse_user')) || null, // Persystencja użytkownika po odświeżeniu
   watchlist: [],
   marketData: [],
   exchanges: [],
@@ -64,25 +64,36 @@ export const useStore = create((set, get) => ({
     }
   },
 
-  login: async (email, password) => {
+  login: async (username, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await apiService.login(email, password);
-      // After login, fetch watchlist for this user
-      const wlRes = await apiService.getUserWatchlist(response.data.id);
-      set({ user: response.data, watchlist: wlRes.data, isLoading: false });
+      const response = await apiService.login(username, password);
+      // Dalsza logika po sukcesie z API
+      const { user, token } = response.data;
+      
+      localStorage.setItem('crypto_pulse_token', token);
+      localStorage.setItem('crypto_pulse_user', JSON.stringify(user));
+      
+      // Pobieranie prawdziwej watchlisty
+      const wlRes = await apiService.getUserWatchlist();
+      set({ user: user, watchlist: wlRes.data, isLoading: false });
     } catch (err) {
       set({ error: err.message, isLoading: false });
       throw err;
     }
   },
 
-  register: async (email, password) => {
+  register: async (username, email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await apiService.register(email, password);
-      const wlRes = await apiService.getUserWatchlist(response.data.id);
-      set({ user: response.data, watchlist: wlRes.data, isLoading: false });
+      const response = await apiService.register(username, email, password);
+      const { user, token } = response.data;
+      
+      localStorage.setItem('crypto_pulse_token', token);
+      localStorage.setItem('crypto_pulse_user', JSON.stringify(user));
+      
+      const wlRes = await apiService.getUserWatchlist();
+      set({ user: user, watchlist: wlRes.data, isLoading: false });
     } catch (err) {
       set({ error: err.message, isLoading: false });
       throw err;
@@ -90,14 +101,16 @@ export const useStore = create((set, get) => ({
   },
 
   logout: () => {
+    localStorage.removeItem('crypto_pulse_token');
+    localStorage.removeItem('crypto_pulse_user');
     set({ user: null, watchlist: [] });
   },
 
   fetchWatchlist: async () => {
     const { user } = get();
-    if (!user) return;
+    if (!user) return; // Zapobiega pytaniom, kiedy niezalogowany
     try {
-      const resp = await apiService.getUserWatchlist(user.id);
+      const resp = await apiService.getUserWatchlist();
       set({ watchlist: resp.data });
     } catch (err) {
       console.error('Failed to fetch watchlist', err);
@@ -111,15 +124,18 @@ export const useStore = create((set, get) => ({
     const isFaved = watchlist.includes(cryptoId);
     try {
       if (isFaved) {
-        // optimistically update? Or rely on API. Let's rely on API
-        const resp = await apiService.removeFromWatchlist(cryptoId);
-        set({ watchlist: resp.data.watchlist });
+        // Optymistycznie usuwamy z Local State, potem wysyłamy do API
+        set({ watchlist: watchlist.filter(id => id !== cryptoId) });
+        await apiService.removeFromWatchlist(cryptoId);
       } else {
-        const resp = await apiService.addToWatchlist(cryptoId);
-        set({ watchlist: resp.data.watchlist });
+        // Optymistycznie dodajemy do Local State, potem wysyłamy do API
+        set({ watchlist: [...watchlist, cryptoId] });
+        await apiService.addToWatchlist(cryptoId);
       }
     } catch (err) {
       console.error('Watchlist toggle failed', err);
+      // Opcjonalnie: w razie błędu przywracać stary stan
+      get().fetchWatchlist();
     }
   }
 }));

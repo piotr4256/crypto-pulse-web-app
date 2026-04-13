@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login, isLoading, error } = useStore();
@@ -13,7 +13,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await login(username, password);
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -41,11 +41,11 @@ const LoginPage = () => {
           <div className="relative">
             <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
             <input 
-              type="email" 
-              placeholder="Adres e-mail" 
+              type="text" 
+              placeholder="Nazwa użytkownika" 
               className="input-field pl-11"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, UserPlus, Eye, EyeOff } from 'lucide-react';
 
 const RegisterPage = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +14,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register(email, password);
+      await register(username, email, password);
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -41,6 +42,18 @@ const RegisterPage = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative">
+            <UserPlus className="absolute left-3 top-3 text-gray-400" size={20} />
+            <input 
+              type="text" 
+              placeholder="Nazwa użytkownika" 
+              className="input-field pl-11"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+
           <div className="relative">
             <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
             <input 
