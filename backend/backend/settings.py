@@ -15,6 +15,7 @@ import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -100,17 +101,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.jhqtakarvovsfwafrqvg', 
-        'PASSWORD': 'L,*G@KdrX3Pg-cV',              
-        'HOST': 'aws-0-eu-west-1.pooler.supabase.com',
-        'PORT': '5432',                        
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
