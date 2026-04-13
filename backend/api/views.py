@@ -1,15 +1,24 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import viewsets  
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from .services import CoinGeckoService
+from .models import CryptoCurrency
 from .serializers import (
     MarketCoinSerializer, 
     CoinDetailSerializer, 
     ExchangeSerializer, 
     TrendingSerializer, 
-    GlobalStatsSerializer
+    GlobalStatsSerializer,
+    CryptoCurrencyModelSerializer
 )
-
+class CryptoCurrencyViewSet(viewsets.ModelViewSet):
+    """
+    Obsługuje dane z bazy danych Supabase (CRUD).
+    Pod adresem /api/cryptocurrencies/ zobaczysz JSONa z bazy.
+    """
+    queryset = CryptoCurrency.objects.all()
+    serializer_class = CryptoCurrencyModelSerializer
 class MarketListView(APIView):
     """
     Pobiera listę top 100 kryptowalut.

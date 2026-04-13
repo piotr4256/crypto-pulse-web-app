@@ -1,4 +1,12 @@
+from .models import CryptoCurrency
 from rest_framework import serializers
+
+class CryptoCurrencyModelSerializer(serializers.ModelSerializer):
+    """ Serializuje dane bezpośrednio z Twojej bazy danych Supabase """
+    class Meta:
+        model = CryptoCurrency
+        # Wybieramy wszystkie pola, które zdefiniowałeś w models.py
+        fields = ['id', 'name', 'symbol', 'market_cap_rank', 'image_url', 'is_active', 'created_at']
 
 class MarketCoinSerializer(serializers.Serializer):
     """ Serializuje dane z endpointu /coins/markets """
