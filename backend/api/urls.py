@@ -1,14 +1,24 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     MarketListView,
     CoinDetailView,
     CoinMarketChartView,
     ExchangesListView,
     TrendingListView,
-    GlobalStatsView
+    GlobalStatsView,
+    CryptoCurrencyViewSet  # <-- DODANY IMPORT
 )
 
+# Router automatycznie tworzy ścieżki dla Twojej bazy (GET, POST, DELETE itp.)
+router = DefaultRouter()
+router.register(r'cryptocurrencies', CryptoCurrencyViewSet, basename='cryptocurrency')
+
 urlpatterns = [
+    # Router musi być podpięty pod pusty string lub konkretną ścieżkę
+    path('', include(router.urls)), 
+    
+    # Twoje dotychczasowe ścieżki proxy
     path('markets/', MarketListView.as_view(), name='market-list'),
     path('coins/<str:coin_id>/', CoinDetailView.as_view(), name='coin-detail'),
     path('coins/<str:coin_id>/chart/', CoinMarketChartView.as_view(), name='coin-chart'),

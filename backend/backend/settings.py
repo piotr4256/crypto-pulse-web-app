@@ -102,11 +102,14 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=False if '127.0.0.1' in ALLOWED_HOSTS or 'localhost' in ALLOWED_HOSTS else True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.jhqtakarvovsfwafrqvg', 
+        'PASSWORD': 'L,*G@KdrX3Pg-cV',              
+        'HOST': 'aws-0-eu-west-1.pooler.supabase.com',
+        'PORT': '5432',                        
+    }
 }
 
 
