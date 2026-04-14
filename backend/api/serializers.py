@@ -1,5 +1,6 @@
 from .models import UserWatchlist
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 class UserWatchlistSerializer(serializers.ModelSerializer):
     """ Serializuje listę obserwowanych (tylko ID monety) """
@@ -9,8 +10,6 @@ class UserWatchlistSerializer(serializers.ModelSerializer):
         model = UserWatchlist
         fields = ['id', 'user', 'username', 'coin_id', 'added_at']
         read_only_fields = ['user', 'added_at']
-
-from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
