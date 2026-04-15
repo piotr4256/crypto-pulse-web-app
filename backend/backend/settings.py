@@ -18,6 +18,79 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Konfiguracja UI Panela Admina (Unfold)
+# settings.py
+
+UNFOLD = {
+    "SITE_TITLE": "CryptoPulse Admin",
+    "SITE_HEADER": "CryptoPulse",
+    "SITE_URL": "https://cryptopulseapp.vercel.app",
+    "SITE_SYMBOL": "currency_bitcoin",
+    "STRINGS": {
+        "welcome_back": "Witaj ponownie w",
+    },
+    "COLORS": {
+        "primary": {
+            "50": "235 251 255",
+            "100": "204 245 255",
+            "200": "153 234 255",
+            "300": "77 221 255",
+            "400": "26 211 255",
+            "500": "0 212 255",
+            "600": "0 170 204",
+            "700": "0 127 153",
+            "800": "0 85 102",
+            "900": "0 42 51",
+            "950": "0 21 26",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Zarządzanie Systemem",
+                "items": [
+                    {
+                        "title": "Użytkownicy",
+                        "link": "/admin/auth/user/",
+                        "icon": "person",
+                    },
+                    {
+                        "title": "Tokeny API",
+                        "link": "/admin/authtoken/tokenproxy/",
+                        "icon": "vpn_key",
+                    },
+                ],
+            },
+            {
+                "title": "Giełda i Portfel",
+                "items": [
+                    {
+                        "title": "Obserwowane",
+                        "link": "/admin/api/userwatchlist/",
+                        "icon": "star",
+                    },
+                ],
+            },
+        ],
+    },
+    "TABS": [
+        {
+            "models": [
+                "auth.user",
+                "api.userwatchlist",
+            ],
+            "items": [
+                {
+                    "title": "Podgląd",
+                    "link": "admin:index",
+                },
+            ],
+        },
+    ],
+}
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -139,9 +212,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
@@ -180,24 +253,4 @@ SPECTACULAR_SETTINGS = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Konfiguracja UI Panela Admina (Unfold)
-UNFOLD = {
-    "SITE_TITLE": "CryptoPulse Admin",
-    "SITE_HEADER": "CryptoPulse",
-    "SITE_URL": "/",
-    "COLORS": {
-        "primary": {
-            "50": "250 255 255",
-            "100": "186 248 255",
-            "200": "112 238 255",
-            "300": "0 212 255",
-            "400": "0 186 230",
-            "500": "0 154 194",
-            "600": "0 120 153",
-            "700": "0 92 121",
-            "800": "0 68 93",
-            "900": "0 52 72",
-            "950": "0 34 50",
-        },
-    },
-}
+
