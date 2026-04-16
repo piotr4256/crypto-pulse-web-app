@@ -9,7 +9,6 @@ from .views import (
     GlobalStatsView,
     UserWatchlistViewSet,
     RegisterAPIView,
-    CustomAuthToken
 )
 
 # Router automatycznie tworzy ścieżki dla Twojej bazy (GET, POST, DELETE itp.)
@@ -22,7 +21,6 @@ urlpatterns = [
     
     # Autoryzacja
     path('register/', RegisterAPIView.as_view(), name='register'),
-    path('login/', CustomAuthToken.as_view(), name='login'),
 
     # Twoje dotychczasowe ścieżki proxy
     path('markets/', MarketListView.as_view(), name='market-list'),

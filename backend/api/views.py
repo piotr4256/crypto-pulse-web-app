@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from django.contrib.auth.models import User
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .services import CoinGeckoService
 from .models import UserWatchlist
@@ -28,23 +28,14 @@ class RegisterAPIView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         # Pobieramy stworzonego usera i generujemy token
-        user = User.objects.get(username=response.data['username'])
-        token, created = Token.objects.get_or_create(user=user)
+        user = User.objects.get(username=response.data["username"])
+        refresh = RefreshToken.for_user(user)
         return Response({
-            "token": token.key,
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
             "user": UserSerializer(user).data
         })
 
-class CustomAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'token': token.key,
-            'user': UserSerializer(user).data
-        })
 
 class UserWatchlistViewSet(viewsets.ModelViewSet):
     """
@@ -59,6 +50,7 @@ class UserWatchlistViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
 class MarketListView(APIView):
     """
     Pobiera listę top 100 kryptowalut.
