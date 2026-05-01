@@ -1,43 +1,50 @@
 import axios from 'axios';
 
-// Baza do symulacji watchlisty (i logowania)
-const STORAGE_KEY = 'crypto_pulse_watchlist';
-let MOCK_WATCHLIST = JSON.parse(localStorage.getItem(STORAGE_KEY)) || ['bitcoin', 'solana'];
-
-const saveToStorage = (data) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-};
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 const isProd = import.meta.env.PROD;
 const LOCAL_DJANGO_URL = 'http://127.0.0.1:8000/api';
 const PROD_DJANGO_URL = 'https://crypto-pulse-web-app.onrender.com/api';
 
 const BASE_URL = isProd ? PROD_DJANGO_URL : LOCAL_DJANGO_URL;
 
-//atrapa do logowania
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+});
+
+// Interceptor do automatycznego wstrzykiwania tokenu do autoryzowanych ścieżek
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('crypto_pulse_token');
+  if (token) {
+    config.headers.Authorization = `Token ${token}`;
+  }
+  return config;
+});
+
 export const apiService = {
-  login: async (email, password) => {
-    await delay(500);
-    if (email && password) {
-      return { data: { id: 'u1', email, token: 'mock-jwt-token-123' } };
+  login: async (username, password) => {
+    try {
+      // Endpoint DRF ObtainAuthToken odbiera domyślnie 'username' i 'password'
+      const response = await apiClient.post('/login/', { username, password });
+      return { data: response.data };
+    } catch (error) {
+      throw new Error(error.response?.data?.non_field_errors?.[0] || 'Niepoprawne dane logowania');
     }
-    throw new Error('Invalid credentials');
   },
 
-  //atrapa do rejestracji
-  register: async (email, password) => {
-    await delay(500);
-    if (email && password) {
-      return { data: { id: 'u1', email, token: 'mock-jwt-token-123' } };
+  register: async (username, email, password) => {
+    try {
+      const response = await apiClient.post('/register/', { username, email, password });
+      return { data: response.data };
+    } catch (error) {
+       // Odbieranie ewentualnych błędów z Django (np. nazwa zajęta)
+      const errs = error.response?.data;
+      const msg = errs ? Object.values(errs).flat()[0] : 'Błąd rejestracji';
+      throw new Error(msg);
     }
-    throw new Error('Registration failed');
   },
 
   getAllCryptos: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/markets/`);
+      const response = await apiClient.get('/markets/');
       return { data: response.data };
     } catch (error) {
       console.error('Błąd pobierania danych:', error);
@@ -47,7 +54,7 @@ export const apiService = {
 
   getCoinDetails: async (id) => {
     try {
-      const response = await axios.get(`${BASE_URL}/coins/${id}/`);
+      const response = await apiClient.get(`/coins/${id}/`);
       return { data: response.data };
     } catch (error) {
       console.error(`Błąd pobierania szczegółów dla ${id}:`, error);
@@ -57,7 +64,7 @@ export const apiService = {
 
   getMarketChart: async (id, days = 7) => {
     try {
-      const response = await axios.get(`${BASE_URL}/coins/${id}/chart/`);
+      const response = await apiClient.get(`/coins/${id}/chart/`);
       return { data: response.data };
     } catch (error) {
       console.error(`Błąd pobierania wykresu dla ${id}:`, error);
@@ -67,7 +74,7 @@ export const apiService = {
 
   getExchanges: async (page = 1) => {
     try {
-      const response = await axios.get(`${BASE_URL}/exchanges/`);
+      const response = await apiClient.get('/exchanges/');
       return { data: response.data };
     } catch (error) {
       console.error('Błąd pobierania giełd:', error);
@@ -77,7 +84,7 @@ export const apiService = {
 
   getTrending: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/trending/`);
+      const response = await apiClient.get('/trending/');
       return { data: response.data.coins || response.data };
     } catch (error) {
       console.error('Błąd pobierania trendków:', error);
@@ -87,7 +94,7 @@ export const apiService = {
 
   getGlobalStats: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/global/`);
+      const response = await apiClient.get('/global/');
       return { data: response.data.data || response.data };
     } catch (error) {
       console.error('Błąd pobierania statystyk globalnych:', error);
@@ -96,23 +103,42 @@ export const apiService = {
   },
 
   getUserWatchlist: async () => {
-    await delay(300);
-    return { data: MOCK_WATCHLIST };
+    try {
+      const response = await apiClient.get('/watchlist/');
+      // Mapujemy z tabeli BD na samą tablicę stringów z id monet, np. ['bitcoin', 'solana']
+      return { data: response.data.map(item => item.coin_id) }; 
+    } catch (error) {
+      console.error('Błąd pobierania watchlisty:', error);
+      return { data: [] };
+    }
   },
 
   addToWatchlist: async (cryptoId) => {
-    await delay(200);
-    if (!MOCK_WATCHLIST.includes(cryptoId)) {
-      MOCK_WATCHLIST.push(cryptoId);
-      saveToStorage(MOCK_WATCHLIST);
+    try {
+      await apiClient.post('/watchlist/', { coin_id: cryptoId });
+      // Zwracamy po prostu info że się udało. Pamiętaj, że Backend nie odświeża całej listy w POST
+      return { data: { success: true } };
+    } catch (error) {
+      console.error('Nie udało się dodać do ulubionych', error);
+      throw error;
     }
-    return { data: { success: true, watchlist: MOCK_WATCHLIST } };
   },
 
   removeFromWatchlist: async (cryptoId) => {
-    await delay(200);
-    MOCK_WATCHLIST = MOCK_WATCHLIST.filter(id => id !== cryptoId);
-    saveToStorage(MOCK_WATCHLIST);
-    return { data: { success: true, watchlist: MOCK_WATCHLIST } };
+    try {
+      // DRF udostępnia usuwanie na postawie ID. Ponieważ mamy ID elementu listy, a znamy 'coin_id', musimy podać coin_id.
+      // Czekaj - standardowy ModelViewSet usuwa po 'id' zasobu (PK), nie po 'coin_id'!
+      // Ale nie mamy PK w state? Wtedy usunąć to po ID jest niemożliwie! Trzeba zrobić lookup. 
+      // Zaraz to naprawię dopisując customowy DELETE viewset w backendzie lub pobierając z pamięci PK by usunąć!
+      let items = await apiClient.get('/watchlist/');
+      let target = items.data.find(x => x.coin_id === cryptoId);
+      if (target) {
+        await apiClient.delete(`/watchlist/${target.id}/`);
+      }
+      return { data: { success: true } };
+    } catch (error) {
+      console.error('Błąd usuwania z ulubionych:', error);
+      throw error;
+    }
   }
 };

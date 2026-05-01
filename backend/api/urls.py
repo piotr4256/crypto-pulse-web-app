@@ -1,14 +1,28 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     MarketListView,
     CoinDetailView,
     CoinMarketChartView,
     ExchangesListView,
     TrendingListView,
-    GlobalStatsView
+    GlobalStatsView,
+    UserWatchlistViewSet,
+    RegisterAPIView,
 )
 
+# Router automatycznie tworzy ścieżki dla Twojej bazy (GET, POST, DELETE itp.)
+router = DefaultRouter()
+router.register(r'watchlist', UserWatchlistViewSet, basename='watchlist')
+
 urlpatterns = [
+    # Router musi być podpięty pod pusty string lub konkretną ścieżkę
+    path('', include(router.urls)), 
+    
+    # Autoryzacja
+    path('register/', RegisterAPIView.as_view(), name='register'),
+
+    # Twoje dotychczasowe ścieżki proxy
     path('markets/', MarketListView.as_view(), name='market-list'),
     path('coins/<str:coin_id>/', CoinDetailView.as_view(), name='coin-detail'),
     path('coins/<str:coin_id>/chart/', CoinMarketChartView.as_view(), name='coin-chart'),

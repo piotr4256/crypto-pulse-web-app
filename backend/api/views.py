@@ -1,14 +1,55 @@
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import viewsets, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiExample
+from django.contrib.auth.models import User
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from .services import CoinGeckoService
+from .models import UserWatchlist
 from .serializers import (
     MarketCoinSerializer, 
     CoinDetailSerializer, 
     ExchangeSerializer, 
     TrendingSerializer, 
-    GlobalStatsSerializer
+    GlobalStatsSerializer,
+    UserWatchlistSerializer,
+    RegisterSerializer,
+    UserSerializer
 )
+
+class RegisterAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        # Pobieramy stworzonego usera i generujemy token
+        user = User.objects.get(username=response.data["username"])
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "user": UserSerializer(user).data
+        })
+
+
+class UserWatchlistViewSet(viewsets.ModelViewSet):
+    """
+    Obsługuje ulubione kryptowaluty użytkowników (Watchlist).
+    Tylko zalogowani użytkownicy!
+    """
+    serializer_class = UserWatchlistSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserWatchlist.objects.filter(user=self.request.user).order_by('-added_at')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class MarketListView(APIView):
     """
