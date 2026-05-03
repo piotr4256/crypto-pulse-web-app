@@ -22,6 +22,7 @@ export const useMarketQuery = () =>
     },
     staleTime: 60_000,      // dane świeże przez 1 minutę
     gcTime:    5 * 60_000,  // cache żyje 5 minut po ostatnim użyciu
+    refetchInterval: 30_000, // Automatyczne odświeżanie co 30 sekund
   });
 
 // ─── Exchanges ────────────────────────────────────────────────────────────────
