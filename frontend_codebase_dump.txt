@@ -1,0 +1,3692 @@
+=== PROJECT STRUCTURE ===
+frontend/
+    .eslintrc.cjs
+    .gitignore
+    .npmrc
+    components.json
+    index.html
+    jsconfig.json
+    package.json
+    postcss.config.js
+    Projekt PUI.pdf
+    vercel.json
+    vite.config.js
+    src/
+        App.jsx
+        index.css
+        main.jsx
+        api/
+            apiService.js
+        components/
+            AnimatedBackground.jsx
+            AnimatedHeroTitle.jsx
+            CryptoTicker.jsx
+            GlareHover.jsx
+            Layout.jsx
+            Navbar.jsx
+            PortfolioSection.jsx
+            ScrollToTopButton.jsx
+            ui/
+                badge.jsx
+                button.jsx
+                card.jsx
+                input.jsx
+                label.jsx
+                table.jsx
+                tabs.jsx
+        hooks/
+            queries.js
+        lib/
+            utils.js
+        pages/
+            CryptoDetailPage.jsx
+            ExchangesPage.jsx
+            FavoritesPage.jsx
+            LoginPage.jsx
+            MarketPage.jsx
+            RegisterPage.jsx
+            TrendingPage.jsx
+        store/
+            useStore.js
+
+================================================================================
+=== FILE CONTENTS ===
+================================================================================
+
+--- START OF FILE: .eslintrc.cjs ---
+module.exports = {
+  env: { browser: true, es2021: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended',
+  ],
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+  settings: { react: { version: 'detect' } },
+  plugins: ['react-refresh'],
+  rules: {
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+    'react/prop-types': 'off',
+    'no-unused-vars': ['error', { 'varsIgnorePattern': 'React|container|userId' }]
+  },
+};
+
+--- END OF FILE: .eslintrc.cjs ---
+
+========================================
+
+--- START OF FILE: .gitignore ---
+# Dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/dist
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+--- END OF FILE: .gitignore ---
+
+========================================
+
+--- START OF FILE: .npmrc ---
+legacy-peer-deps=true
+
+--- END OF FILE: .npmrc ---
+
+========================================
+
+--- START OF FILE: components.json ---
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-nova",
+  "rsc": false,
+  "tsx": false,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "rtl": false,
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "menuColor": "default",
+  "menuAccent": "subtle",
+  "registries": {}
+}
+
+--- END OF FILE: components.json ---
+
+========================================
+
+--- START OF FILE: index.html ---
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="CryptoPulse — śledź aktualne kursy kryptowalut, wykresy historyczne, rankingi giełd i trendy rynkowe w czasie rzeczywistym." />
+    <title>CryptoPulse — Kursy Kryptowalut</title>
+  </head>
+  <body class="bg-crypto-bg text-white antialiased min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+--- END OF FILE: index.html ---
+
+========================================
+
+--- START OF FILE: jsconfig.json ---
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+
+--- END OF FILE: jsconfig.json ---
+
+========================================
+
+--- START OF FILE: package.json ---
+{
+  "name": "crypto-tracker",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.4.1",
+    "@fontsource-variable/geist": "^5.2.8",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@tanstack/react-query": "^5.100.8",
+    "@tanstack/react-query-devtools": "^5.100.8",
+    "axios": "^1.6.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^1.14.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.21.0",
+    "recharts": "^3.8.0",
+    "tailwind-merge": "^3.5.0",
+    "tw-animate-css": "^1.4.0",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^4.2.4",
+    "vite": "^5.0.8"
+  }
+}
+
+--- END OF FILE: package.json ---
+
+========================================
+
+--- START OF FILE: postcss.config.js ---
+export default {}
+
+--- END OF FILE: postcss.config.js ---
+
+========================================
+
+--- START OF FILE: vercel.json ---
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+--- END OF FILE: vercel.json ---
+
+========================================
+
+--- START OF FILE: vite.config.js ---
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import tailwindcss from '@tailwindcss/vite'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+
+--- END OF FILE: vite.config.js ---
+
+========================================
+
+--- START OF FILE: src\App.jsx ---
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import MarketPage from './pages/MarketPage';
+import FavoritesPage from './pages/FavoritesPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import CryptoDetailPage from './pages/CryptoDetailPage';
+import ExchangesPage from './pages/ExchangesPage';
+import TrendingPage from './pages/TrendingPage';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<MarketPage />} />
+          <Route path="/ulubione" element={<FavoritesPage />} />
+          <Route path="/coin/:id" element={<CryptoDetailPage />} />
+          <Route path="/exchanges" element={<ExchangesPage />} />
+          <Route path="/trending" element={<TrendingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+--- END OF FILE: src\App.jsx ---
+
+========================================
+
+--- START OF FILE: src\index.css ---
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/geist";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TAILWIND v4 THEME
+   Wszystkie tokeny kolorów, fontów i animacji definiowane tutaj.
+   Tailwind v4 czyta `--color-*`, `--font-*`, `--animate-*` z @theme.
+───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-sans: 'Geist Variable', sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* Custom crypto palette */
+  --color-crypto-bg: #050508;
+  --color-crypto-card: rgba(20, 20, 26, 0.7);
+  --color-crypto-card-solid: #14141a;
+  --color-crypto-green: #00ff88;
+  --color-crypto-green-glow: #00ff88aa;
+  --color-crypto-red: #ff0055;
+  --color-crypto-red-glow: #ff0055aa;
+  --color-crypto-primary: #00d4ff;
+  --color-crypto-primary-glow: #00d4ffaa;
+  --color-crypto-purple: #b026ff;
+  --color-crypto-purple-glow: #b026ffaa;
+  --color-crypto-yellow: #ffea00;
+  --color-crypto-yellow-glow: #ffea00aa;
+
+  /* Border radius */
+  --radius: 0.625rem;
+
+  /* Custom animations */
+  --animate-marquee: marquee 120s linear infinite;
+  --animate-pulse-neon: pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* Keyframes for custom animations */
+  @keyframes marquee {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes pulse-neon {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.7; }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TAILWIND v4 @theme inline
+   Mapuje shadcn CSS variables (--background, --primary, ...) na tokeny
+   Tailwinda. `inline` oznacza: nie generuj klas, tylko udostępnij vars.
+───────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-background:            var(--background);
+  --color-foreground:            var(--foreground);
+  --color-card:                  var(--card);
+  --color-card-foreground:       var(--card-foreground);
+  --color-popover:               var(--popover);
+  --color-popover-foreground:    var(--popover-foreground);
+  --color-primary:               var(--primary);
+  --color-primary-foreground:    var(--primary-foreground);
+  --color-secondary:             var(--secondary);
+  --color-secondary-foreground:  var(--secondary-foreground);
+  --color-muted:                 var(--muted);
+  --color-muted-foreground:      var(--muted-foreground);
+  --color-accent:                var(--accent);
+  --color-accent-foreground:     var(--accent-foreground);
+  --color-destructive:           var(--destructive);
+  --color-border:                var(--border);
+  --color-input:                 var(--input);
+  --color-ring:                  var(--ring);
+  --color-sidebar:               var(--sidebar);
+  --color-sidebar-foreground:    var(--sidebar-foreground);
+  --color-sidebar-primary:       var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:        var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:        var(--sidebar-border);
+  --color-sidebar-ring:          var(--sidebar-ring);
+  --color-chart-1:               var(--chart-1);
+  --color-chart-2:               var(--chart-2);
+  --color-chart-3:               var(--chart-3);
+  --color-chart-4:               var(--chart-4);
+  --color-chart-5:               var(--chart-5);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   shadcn CSS VARIABLES
+   Zwykłe CSS vars — shadcn/ui odczytuje je przez `var()` bezpośrednio
+───────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply overflow-x-hidden w-full h-full bg-crypto-bg text-white;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENT UTILITIES
+───────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .btn-primary {
+    @apply bg-crypto-primary/80 border border-crypto-primary hover:bg-crypto-primary/40 hover:shadow-[0_0_15px_rgba(0,212,255,0.5)] text-crypto-primary font-medium py-2 px-4 rounded-lg transition-all focus:ring-4 focus:ring-crypto-primary/50 outline-none;
+  }
+
+  .input-field {
+    @apply w-full bg-crypto-card border border-crypto-primary/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-crypto-primary focus:ring-1 focus:ring-crypto-primary focus:shadow-[0_0_10px_rgba(0,212,255,0.3)] outline-none transition-all;
+  }
+
+  /* Neon text effects */
+  .text-glow-primary {
+    text-shadow: 0 0 10px theme('colors.crypto-primary'), 0 0 20px theme('colors.crypto-primary-glow');
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 10px theme('colors.crypto-green'), 0 0 20px theme('colors.crypto-green-glow');
+  }
+
+  .text-glow-red {
+    text-shadow: 0 0 10px theme('colors.crypto-red'), 0 0 20px theme('colors.crypto-red-glow');
+  }
+
+  .text-glow-purple {
+    text-shadow: 0 0 10px theme('colors.crypto-purple'), 0 0 20px theme('colors.crypto-purple-glow');
+  }
+
+  .text-glow-yellow {
+    text-shadow: 0 0 10px theme('colors.crypto-yellow'), 0 0 20px theme('colors.crypto-yellow-glow');
+  }
+
+  /* Neon box effects */
+  .box-glow-primary {
+    box-shadow: 0 0 15px theme('colors.crypto-primary-glow');
+  }
+
+  .box-glow-purple {
+    box-shadow: 0 0 15px theme('colors.crypto-purple-glow');
+  }
+
+  /* Navbar pill container */
+  .nav-pill-container {
+    @apply relative flex items-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-1.5 py-1.5 shadow-2xl;
+  }
+
+  .nav-indicator {
+    @apply absolute rounded-full transition-all duration-300 ease-out bg-crypto-primary/20 border border-crypto-primary/30 shadow-[0_0_15px_rgba(0,212,255,0.3)];
+    z-index: 0;
+    height: calc(100% - 12px);
+    top: 6px;
+  }
+
+  .nav-link-item {
+    @apply relative z-10 px-5 py-2 rounded-full transition-colors duration-300 font-medium text-sm;
+  }
+
+  /* Legacy .card class — only used by TrendingPage & PortfolioSection (not shadcn <Card>) */
+  .card {
+    @apply bg-crypto-card backdrop-blur-md border border-gray-800/80 rounded-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   KEYFRAMES not in @theme (logo, bitcoin coin, activity pulse)
+───────────────────────────────────────────────────────────────────────────── */
+@keyframes logo-flip {
+  0%   { transform: rotateY(0deg); }
+  50%  { transform: rotateY(90deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+.animate-logo-flip {
+  animation: logo-flip 0.6s ease-in-out;
+}
+
+@keyframes bitcoin-coin-spin {
+  0%   { transform: rotateY(0deg) scale(1);    filter: drop-shadow(0 0 0px #f7931a); }
+  30%  { transform: rotateY(180deg) scale(1.2); filter: drop-shadow(0 0 8px #f7931a); }
+  70%  { transform: rotateY(360deg) scale(1.2); filter: drop-shadow(0 0 8px #f7931a); }
+  100% { transform: rotateY(540deg) scale(1);   filter: drop-shadow(0 0 0px #f7931a); }
+}
+
+.animate-bitcoin-coin {
+  animation: bitcoin-coin-spin 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulse-activity {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.1); }
+}
+
+.animate-activity-pulse {
+  animation: pulse-activity 2s ease-in-out infinite;
+}
+--- END OF FILE: src\index.css ---
+
+========================================
+
+--- START OF FILE: src\main.jsx ---
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import App from './App.jsx'
+import './index.css'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Ponów request 1 raz przed pokazaniem błędu (domyślnie 3)
+      retry: 1,
+      // Nie refetchuj przy focus window — dla API z rate limitami (CoinGecko)
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <App />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+    </QueryClientProvider>
+  </React.StrictMode>,
+)
+
+--- END OF FILE: src\main.jsx ---
+
+========================================
+
+--- START OF FILE: src\api\apiService.js ---
+import axios from 'axios';
+
+const isProd = import.meta.env.PROD;
+const LOCAL_DJANGO_URL = 'http://127.0.0.1:8000/api';
+const PROD_DJANGO_URL = 'https://crypto-pulse-web-app.onrender.com/api';
+
+const BASE_URL = isProd ? PROD_DJANGO_URL : LOCAL_DJANGO_URL;
+
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+});
+
+// Interceptor do automatycznego wstrzykiwania tokenu do autoryzowanych ścieżek
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('crypto_pulse_token');
+  if (token) {
+    config.headers.Authorization = `Token ${token}`;
+  }
+  return config;
+});
+
+export const apiService = {
+  login: async (username, password) => {
+    try {
+      // Endpoint DRF ObtainAuthToken odbiera domyślnie 'username' i 'password'
+      const response = await apiClient.post('/login/', { username, password });
+      return { data: response.data };
+    } catch (error) {
+      throw new Error(error.response?.data?.non_field_errors?.[0] || 'Niepoprawne dane logowania');
+    }
+  },
+
+  register: async (username, email, password) => {
+    try {
+      const response = await apiClient.post('/register/', { username, email, password });
+      return { data: response.data };
+    } catch (error) {
+       // Odbieranie ewentualnych błędów z Django (np. nazwa zajęta)
+      const errs = error.response?.data;
+      const msg = errs ? Object.values(errs).flat()[0] : 'Błąd rejestracji';
+      throw new Error(msg);
+    }
+  },
+
+  getAllCryptos: async () => {
+    try {
+      const response = await apiClient.get('/markets/');
+      return { data: response.data };
+    } catch (error) {
+      console.error('Błąd pobierania danych:', error);
+      throw new Error('Nie udało się pobrać danych z rynku. Spróbuj ponownie później.');
+    }
+  },
+
+  getCoinDetails: async (id) => {
+    try {
+      const response = await apiClient.get(`/coins/${id}/`);
+      return { data: response.data };
+    } catch (error) {
+      console.error(`Błąd pobierania szczegółów dla ${id}:`, error);
+      throw new Error('Nie udało się pobrać szczegółów kryptowaluty.');
+    }
+  },
+
+  getMarketChart: async (id, days = 7) => {
+    try {
+      const response = await apiClient.get(`/coins/${id}/chart/?days=${days}`);
+      return { data: response.data };
+    } catch (error) {
+      console.error(`Błąd pobierania wykresu dla ${id}:`, error);
+      throw new Error('Nie udało się pobrać wykresu cenowego.');
+    }
+  },
+
+  getExchanges: async (page = 1) => {
+    try {
+      const response = await apiClient.get('/exchanges/');
+      return { data: response.data };
+    } catch (error) {
+      console.error('Błąd pobierania giełd:', error);
+      throw new Error('Nie udało się pobrać listy giełd.');
+    }
+  },
+
+  getTrending: async () => {
+    try {
+      const response = await apiClient.get('/trending/');
+      return { data: response.data.coins || response.data };
+    } catch (error) {
+      console.error('Błąd pobierania trendków:', error);
+      throw new Error('Nie udało się pobrać najnowszych trendów.');
+    }
+  },
+
+  getGlobalStats: async () => {
+    try {
+      const response = await apiClient.get('/global/');
+      return { data: response.data.data || response.data };
+    } catch (error) {
+      console.error('Błąd pobierania statystyk globalnych:', error);
+      throw new Error('Nie udało się pobrać danych globalnych.');
+    }
+  },
+
+  getUserWatchlist: async () => {
+    try {
+      const response = await apiClient.get('/watchlist/');
+      // Mapujemy z tabeli BD na samą tablicę stringów z id monet, np. ['bitcoin', 'solana']
+      return { data: response.data.map(item => item.coin_id) }; 
+    } catch (error) {
+      console.error('Błąd pobierania watchlisty:', error);
+      return { data: [] };
+    }
+  },
+
+  addToWatchlist: async (cryptoId) => {
+    try {
+      await apiClient.post('/watchlist/', { coin_id: cryptoId });
+      // Zwracamy po prostu info że się udało. Pamiętaj, że Backend nie odświeża całej listy w POST
+      return { data: { success: true } };
+    } catch (error) {
+      console.error('Nie udało się dodać do ulubionych', error);
+      throw error;
+    }
+  },
+
+  removeFromWatchlist: async (cryptoId) => {
+    try {
+      await apiClient.delete(`/watchlist/${cryptoId}/`);
+      return { data: { success: true } };
+    } catch (error) {
+      console.error('Błąd usuwania z ulubionych:', error);
+      throw error;
+    }
+  }
+};
+
+--- END OF FILE: src\api\apiService.js ---
+
+========================================
+
+--- START OF FILE: src\components\AnimatedBackground.jsx ---
+import React, { useRef, useEffect } from 'react';
+
+/**
+ * AnimatedBackground — czysty Canvas API, zero zewnętrznych zależności.
+ * Zastępuje tsparticles (~2MB). Renderuje sieć połączonych cząstek
+ * w stylu "crypto neon" z efektem hover attract.
+ */
+const AnimatedBackground = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animId;
+    let mouseX = -9999;
+    let mouseY = -9999;
+
+    const COLORS = ['#00d4ff', '#b026ff', '#00ff88'];
+    const PARTICLE_COUNT = 60;
+    const MAX_DIST = 150;
+    const ATTRACT_DIST = 200;
+    const ATTRACT_FORCE = 0.3;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const onMouseMove = (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    };
+    window.addEventListener('mousemove', onMouseMove);
+
+    // Inicjalizacja cząstek
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 1.5,
+      vy: (Math.random() - 0.5) * 1.5,
+      r: Math.random() * 2 + 1,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Ruch i attract do myszy
+      for (const p of particles) {
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < ATTRACT_DIST && dist > 0) {
+          p.vx += (dx / dist) * ATTRACT_FORCE * 0.05;
+          p.vy += (dy / dist) * ATTRACT_FORCE * 0.05;
+        }
+
+        // Prędkość max
+        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (speed > 2) { p.vx = (p.vx / speed) * 2; p.vy = (p.vy / speed) * 2; }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Odbicie od krawędzi
+        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        p.x = Math.max(0, Math.min(canvas.width,  p.x));
+        p.y = Math.max(0, Math.min(canvas.height, p.y));
+
+        // Rysuj cząstkę
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Połączenia między bliskimi cząstkami
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MAX_DIST) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 212, 255, ${(1 - dist / MAX_DIST) * 0.25})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full -z-50 pointer-events-none"
+      aria-hidden="true"
+    />
+  );
+};
+
+export default AnimatedBackground;
+
+--- END OF FILE: src\components\AnimatedBackground.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\AnimatedHeroTitle.jsx ---
+import React, { useState, useEffect } from 'react';
+import { Activity } from 'lucide-react';
+
+// Phases: 'text' → 'collapsing' → 'bitcoin' → 'pulse' → 'expanding' → 'text'
+const PHASE_DURATION = {
+  text: 3500,
+  collapsing: 700,
+  bitcoin: 1200,
+  pulse: 1200,
+  expanding: 700,
+};
+
+const CRYPTO_TEXT = 'Crypto';
+const PULSE_TEXT = 'Pulse';
+const ALL_LETTERS = [...CRYPTO_TEXT, ...PULSE_TEXT];
+const CENTER = (ALL_LETTERS.length - 1) / 2; // 5.5
+
+// Bitcoin SVG matching the navbar style
+const BitcoinIcon = () => (
+  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="46" fill="#00d4ff" opacity="0.1" />
+    <circle cx="50" cy="50" r="46" stroke="#00d4ff" strokeWidth="3" fill="none"
+      style={{ filter: 'drop-shadow(0 0 12px #00d4ff)' }} />
+    <text x="50" y="68" textAnchor="middle" fontSize="52" fontWeight="bold"
+      fill="#00d4ff" fontFamily="Arial, sans-serif"
+      style={{ filter: 'drop-shadow(0 0 8px #00d4ff)' }}>₿</text>
+  </svg>
+);
+
+const AnimatedHeroTitle = () => {
+  const [phase, setPhase] = useState('text');
+
+  useEffect(() => {
+    const nextPhase = {
+      text: 'collapsing',
+      collapsing: 'bitcoin',
+      bitcoin: 'pulse',
+      pulse: 'expanding',
+      expanding: 'text',
+    };
+    const timer = setTimeout(() => {
+      setPhase(prev => nextPhase[prev]);
+    }, PHASE_DURATION[phase]);
+    return () => clearTimeout(timer);
+  }, [phase]);
+
+  const isCollapsing = phase === 'collapsing';
+  const isHidden = phase === 'bitcoin' || phase === 'pulse';
+  const isExpanding = phase === 'expanding';
+  const showText = phase === 'text' || isCollapsing || isExpanding;
+  const showBitcoin = phase === 'bitcoin';
+  const showPulse = phase === 'pulse';
+
+  const getLetterStyle = (index) => {
+    const distFromCenter = index - CENTER;
+    const direction = distFromCenter < 0 ? 1 : distFromCenter > 0 ? -1 : 0;
+    const magnitude = Math.abs(distFromCenter) * 14;
+
+    if (isCollapsing) {
+      return {
+        transform: `translateX(${direction * magnitude}px) scale(0)`,
+        opacity: 0,
+        transition: `transform ${PHASE_DURATION.collapsing}ms cubic-bezier(0.4, 0, 0.2, 1), opacity ${PHASE_DURATION.collapsing}ms ease`,
+      };
+    }
+    if (isHidden) {
+      return {
+        transform: `translateX(${direction * magnitude}px) scale(0)`,
+        opacity: 0,
+        transition: 'none',
+      };
+    }
+    if (isExpanding) {
+      return {
+        transform: 'translateX(0) scale(1)',
+        opacity: 1,
+        transition: `transform ${PHASE_DURATION.expanding}ms cubic-bezier(0.4, 0, 0.2, 1), opacity ${PHASE_DURATION.expanding}ms ease`,
+      };
+    }
+    // 'text' phase
+    return {
+      transform: 'translateX(0) scale(1)',
+      opacity: 1,
+      transition: 'none',
+    };
+  };
+
+  return (
+    <div className="relative flex flex-col items-center select-none" style={{ minHeight: 120 }}>
+      {/* Text layer */}
+      <h1
+        className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tighter drop-shadow-xl flex py-4"
+        style={{
+          visibility: showText ? 'visible' : 'hidden',
+          pointerEvents: 'none',
+        }}
+      >
+        {ALL_LETTERS.map((letter, i) => {
+          const isCryptoPart = i < CRYPTO_TEXT.length;
+          return (
+            <span
+              key={i}
+              className={`inline-block ${isCryptoPart ? 'text-white' : 'text-crypto-primary text-glow-primary'}`}
+              style={getLetterStyle(i)}
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </h1>
+
+      {/* Bitcoin icon layer */}
+      <div
+        className="absolute top-1/2 left-1/2"
+        style={{
+          transform: 'translate(-50%, -50%)',
+          opacity: showBitcoin ? 1 : 0,
+          scale: showBitcoin ? '1' : '0.3',
+          transition: showBitcoin
+            ? 'opacity 0.4s ease, scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+            : 'opacity 0.3s ease, scale 0.3s ease',
+          pointerEvents: 'none',
+        }}
+      >
+        <BitcoinIcon />
+      </div>
+
+      {/* Activity/Pulse icon layer */}
+      <div
+        className="absolute top-1/2 left-1/2 text-crypto-primary"
+        style={{
+          transform: 'translate(-50%, -50%)',
+          opacity: showPulse ? 1 : 0,
+          scale: showPulse ? '1' : '0.3',
+          transition: showPulse
+            ? 'opacity 0.4s ease, scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+            : 'opacity 0.3s ease, scale 0.3s ease',
+          pointerEvents: 'none',
+          filter: showPulse ? 'drop-shadow(0 0 16px #00d4ff)' : 'none',
+        }}
+      >
+        <Activity size={96} strokeWidth={1.5} className="animate-activity-pulse" />
+      </div>
+    </div>
+  );
+};
+
+export default AnimatedHeroTitle;
+
+--- END OF FILE: src\components\AnimatedHeroTitle.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\CryptoTicker.jsx ---
+import React from 'react';
+import { useMarketQuery } from '../hooks/queries';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const CryptoTicker = () => {
+  const { data: marketData = [] } = useMarketQuery();
+
+  // Take top 20 for ticker
+  const tickerData = marketData.slice(0, 20);
+
+  if (tickerData.length === 0) return null;
+
+  return (
+    <div className="w-full fixed top-16 left-0 bg-crypto-card/90 backdrop-blur-md border-b border-gray-800/50 overflow-hidden flex items-center h-14 z-40">
+
+      
+      {/* Container dla animacji (podwójny aby zlikwidować przerwę pod koniec) */}
+      <div className="flex animate-marquee whitespace-nowrap group w-fit">
+        
+        {/* Pierwszy zestaw */}
+        <div className="flex shrink-0 items-center justify-start gap-6 px-3">
+            {tickerData.map((coin, idx) => {
+              const isUp = coin.price_change_percentage_24h >= 0;
+              return (
+                <Link key={`first-${coin.id}-${idx}`} to={`/coin/${coin.id}`} className="flex items-center px-4 py-2 space-x-3 hover:bg-white/5 transition-colors cursor-pointer rounded-lg border border-transparent hover:border-gray-800/50">
+                    <div className="flex items-center space-x-2">
+                        {coin.image && <img src={coin.image} alt={coin.symbol} className="w-6 h-6 rounded-full hover:scale-110 transition-transform" />}
+                        <span className="text-sm font-bold text-gray-300 uppercase group-hover:text-crypto-primary transition-colors">{coin.symbol}</span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-300">
+                        ${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    <span className={`text-xs font-bold flex items-center ${isUp ? 'text-crypto-green text-glow-green' : 'text-crypto-red text-glow-red'}`}>
+                        {isUp ? <TrendingUp size={14} className="mr-1" /> : <TrendingDown size={14} className="mr-1" />}
+                        {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
+                    </span>
+                </Link>
+              );
+           })}
+        </div>
+
+        {/* Drugi zestaw - duplikat gładko wjeżdżający za pierwszym */}
+        <div className="flex shrink-0 items-center justify-start gap-6 px-3">
+           {tickerData.map((coin, idx) => {
+              const isUp = coin.price_change_percentage_24h >= 0;
+              return (
+                <Link key={`second-${coin.id}-${idx}`} to={`/coin/${coin.id}`} className="flex items-center px-4 py-2 space-x-3 hover:bg-white/5 transition-colors cursor-pointer rounded-lg border border-transparent hover:border-gray-800/50">
+                    <div className="flex items-center space-x-2">
+                        {coin.image && <img src={coin.image} alt={coin.symbol} className="w-6 h-6 rounded-full hover:scale-110 transition-transform" />}
+                        <span className="text-sm font-bold text-gray-300 uppercase group-hover:text-crypto-primary transition-colors">{coin.symbol}</span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-300">
+                        ${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    <span className={`text-xs font-bold flex items-center ${isUp ? 'text-crypto-green text-glow-green' : 'text-crypto-red text-glow-red'}`}>
+                        {isUp ? <TrendingUp size={14} className="mr-1" /> : <TrendingDown size={14} className="mr-1" />}
+                        {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
+                    </span>
+                </Link>
+              );
+           })}
+        </div>
+        
+      </div>
+    </div>
+  );
+};
+
+export default CryptoTicker;
+
+--- END OF FILE: src\components\CryptoTicker.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\GlareHover.jsx ---
+import { useRef } from 'react';
+
+const GlareHover = ({
+  as: Component = 'div',
+  width,
+  height,
+  background,
+  borderRadius,
+  borderColor,
+  children,
+  glareColor = '#ffffff',
+  glareOpacity = 0.3,
+  glareAngle = -30,
+  glareSize = 300,
+  transitionDuration = 800,
+  playOnce = true,
+  className = '',
+  style = {},
+  ...props
+}) => {
+  const hex = glareColor.replace('#', '');
+  let rgba = glareColor;
+  if (/^[\dA-Fa-f]{6}$/.test(hex)) {
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    rgba = `rgba(${r}, ${g}, ${b}, ${glareOpacity})`;
+  } else if (/^[\dA-Fa-f]{3}$/.test(hex)) {
+    const r = parseInt(hex[0] + hex[0], 16);
+    const g = parseInt(hex[1] + hex[1], 16);
+    const b = parseInt(hex[2] + hex[2], 16);
+    rgba = `rgba(${r}, ${g}, ${b}, ${glareOpacity})`;
+  }
+
+  const overlayRef = useRef(null);
+
+  const animateIn = () => {
+    const el = overlayRef.current;
+    if (!el) return;
+
+    el.style.transition = 'none';
+    el.style.backgroundPosition = '-100% -100%, 0 0';
+    // Trigger reflow
+    void el.offsetWidth;
+    el.style.transition = `${transitionDuration}ms ease`;
+    el.style.backgroundPosition = '100% 100%, 0 0';
+  };
+
+  const animateOut = () => {
+    const el = overlayRef.current;
+    if (!el) return;
+
+    if (playOnce) {
+      el.style.transition = 'none';
+      el.style.backgroundPosition = '-100% -100%, 0 0';
+    } else {
+      el.style.transition = `${transitionDuration}ms ease`;
+      el.style.backgroundPosition = '-100% -100%, 0 0';
+    }
+  };
+
+  const overlayStyle = {
+    position: 'absolute',
+    inset: 0,
+    background: `linear-gradient(${glareAngle}deg,
+        hsla(0,0%,0%,0) 60%,
+        ${rgba} 70%,
+        hsla(0,0%,0%,0) 100%)`,
+    backgroundSize: `${glareSize}% ${glareSize}%, 100% 100%`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '-100% -100%, 0 0',
+    pointerEvents: 'none',
+    zIndex: 10
+  };
+
+  return (
+    <Component
+      className={`relative overflow-hidden ${className}`}
+      style={{
+        width,
+        height,
+        background,
+        borderRadius,
+        borderColor,
+        ...style
+      }}
+      onMouseEnter={animateIn}
+      onMouseLeave={animateOut}
+      {...props}
+    >
+      <div ref={overlayRef} style={overlayStyle} />
+      {children}
+    </Component>
+  );
+};
+
+export default GlareHover;
+
+--- END OF FILE: src\components\GlareHover.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\Layout.jsx ---
+import React from 'react';
+import Navbar from './Navbar';
+import CryptoTicker from './CryptoTicker';
+import AnimatedBackground from './AnimatedBackground';
+import ScrollToTopButton from './ScrollToTopButton';
+
+const Layout = ({ children }) => {
+  return (
+    <div className="min-h-screen flex flex-col pt-[120px] relative bg-transparent">
+      <AnimatedBackground />
+      <div className="relative z-10 flex-1 flex flex-col bg-transparent">
+          <Navbar />
+          <CryptoTicker />
+          <main className="flex-1 container mx-auto px-4 py-8">
+            {children}
+          </main>
+          <footer className="border-t border-gray-800/50 py-6 text-center text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} CryptoPulse.
+          </footer>
+      </div>
+      <ScrollToTopButton />
+    </div>
+  );
+};
+
+export default Layout;
+
+--- END OF FILE: src\components\Layout.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\Navbar.jsx ---
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../store/useStore';
+import { Activity, LogOut, User, Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+// Bitcoin SVG icon as a component
+const BitcoinIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <circle cx="12" cy="12" r="11" fill="#00d4ff" opacity="0.15" />
+    <circle cx="12" cy="12" r="11" stroke="#00d4ff" strokeWidth="1.5" fill="none" />
+    <text x="12" y="16.5" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#00d4ff" fontFamily="Arial, sans-serif">₿</text>
+  </svg>
+);
+
+const Navbar = () => {
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showBitcoin, setShowBitcoin] = useState(false);
+  const [isFlipping, setIsFlipping] = useState(false);
+  
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
+  const containerRef = useRef(null);
+  const linksRef = useRef({});
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Start flip animation
+      setIsFlipping(true);
+      setTimeout(() => {
+        // Halfway through flip – swap the icon
+        setShowBitcoin(prev => !prev);
+      }, 300);
+      setTimeout(() => {
+        // End of flip animation
+        setIsFlipping(false);
+      }, 600);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Indicator Logic
+  useEffect(() => {
+    const activeLink = linksRef.current[location.pathname];
+    if (activeLink && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      
+      setIndicatorStyle({
+        left: linkRect.left - containerRect.left,
+        width: linkRect.width,
+        opacity: 1
+      });
+    } else {
+      setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
+    }
+  }, [location.pathname]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    setIsMobileMenuOpen(false);
+  };
+
+  const navLinks = [
+    { name: 'Rynek', path: '/' },
+    { name: 'Giełdy', path: '/exchanges' },
+    { name: 'Trendy', path: '/trending' },
+    { name: 'Ulubione', path: '/ulubione' },
+  ];
+
+  const toggleMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const NavItem = ({ name, path }) => {
+    const isActive = location.pathname === path;
+    return (
+      <Link 
+        to={path} 
+        ref={el => linksRef.current[path] = el}
+        onClick={() => setIsMobileMenuOpen(false)}
+        className={`nav-link-item ${isActive ? 'text-crypto-primary' : 'text-gray-400 hover:text-white'}`}
+      >
+        {name}
+      </Link>
+    );
+  };
+
+  return (
+    <nav className="fixed top-0 inset-x-0 h-16 z-50 group/nav">
+      {/* Luxury Background Layers */}
+      <div className="absolute inset-0 bg-crypto-bg/80 backdrop-blur-2xl border-b border-white/5" />
+      
+      {/* Top Highlight Line (The "Glass Edge") */}
+      <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-crypto-primary/40 to-transparent opacity-50" />
+      
+      {/* Subtle Radial Glow from top */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-full bg-crypto-primary/5 blur-[80px] pointer-events-none" />
+
+      {/* Noise Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
+      <div className="w-full px-4 md:px-10 h-full flex items-center justify-between relative">
+        
+        {/* Logo */}
+        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-2 text-crypto-primary hover:text-blue-400 transition-colors z-20 group">
+          <div
+            style={{ perspective: '200px', width: 28, height: 28 }}
+            className="relative flex items-center justify-center group-hover:animate-logo-flip"
+          >
+            <div
+              style={{
+                transition: 'transform 0.6s ease-in-out',
+                transform: isFlipping
+                  ? (showBitcoin ? 'rotateY(-90deg)' : 'rotateY(90deg)')
+                  : 'rotateY(0deg)',
+                transformStyle: 'preserve-3d',
+              }}
+              className="flex items-center justify-center"
+            >
+              {showBitcoin
+                ? <BitcoinIcon size={26} className="animate-bitcoin-coin" />
+                : <Activity size={24} className="animate-activity-pulse" />
+              }
+            </div>
+          </div>
+          <span className="font-bold text-xl tracking-wide text-white">Crypto<span className="text-crypto-primary">Pulse</span></span>
+        </Link>
+
+        {/* Desktop Links - NOW PERFECTLY CENTERED */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center">
+          <div ref={containerRef} className="nav-pill-container">
+            <div 
+              className="nav-indicator" 
+              style={{ 
+                left: indicatorStyle.left, 
+                width: indicatorStyle.width,
+                opacity: indicatorStyle.opacity
+              }} 
+            />
+            {navLinks.map(link => (
+               <NavItem key={link.name} name={link.name} path={link.path} />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center z-20">
+          {user ? (
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full backdrop-blur-md">
+                <User size={14} className="text-crypto-primary" />
+                <span className="text-xs font-medium text-gray-300">{user.email}</span>
+              </div>
+              <Button 
+                onClick={handleLogout}
+                variant="ghost"
+                className="rounded-full text-gray-400 hover:text-crypto-red hover:bg-crypto-red/10 border border-transparent hover:border-crypto-red/20 transition-all duration-300"
+              >
+                <LogOut size={16} className="mr-2" />
+                <span>Wyloguj</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center bg-white/5 border border-white/10 p-1.5 rounded-full backdrop-blur-md space-x-1">
+              <Button asChild variant="ghost" className="rounded-full text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300">
+                <Link to="/login">Zaloguj</Link>
+              </Button>
+              <Button asChild className="rounded-full bg-crypto-primary/10 border border-crypto-primary/30 text-crypto-primary hover:bg-crypto-primary/20 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300">
+                <Link to="/register" className="flex items-center space-x-2">
+                  <User size={16} />
+                  <span>Rejestracja</span>
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Menu Toggle Button */}
+        <button 
+          className="md:hidden text-gray-300 hover:text-white focus:outline-none z-20 p-2"
+          onClick={toggleMenu}
+          aria-label="Toggle mobile menu"
+        >
+          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-crypto-bg border-b border-gray-800/50 shadow-2xl flex flex-col px-4 py-6 space-y-6">
+           <div className="flex flex-col space-y-4">
+             {navLinks.map(link => (
+               <NavItem key={link.name} name={link.name} path={link.path} />
+             ))}
+           </div>
+           
+           <div className="pt-6 border-t border-gray-800/50 flex flex-col space-y-4">
+             {user ? (
+                <>
+                  <div className="text-gray-400 font-medium">{user.email}</div>
+                  <Button 
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="text-crypto-red hover:text-red-400 border-red-500/20 bg-red-500/10 hover:bg-red-500/20 w-full flex items-center justify-center space-x-2 py-6 text-lg"
+                  >
+                    <LogOut size={20} />
+                    <span>Wyloguj</span>
+                  </Button>
+                </>
+             ) : (
+                <div className="flex flex-col space-y-3">
+                  <Button asChild variant="outline" className="w-full py-6 text-lg border-gray-700 hover:bg-gray-800 text-white">
+                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Zaloguj się</Link>
+                  </Button>
+                  <Button asChild className="w-full py-6 text-lg bg-crypto-primary text-black hover:bg-crypto-primary/80">
+                    <Link to="/register" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center space-x-2">
+                      <User size={20} />
+                      <span>Zarejestruj się</span>
+                    </Link>
+                  </Button>
+                </div>
+             )}
+           </div>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;
+
+--- END OF FILE: src\components\Navbar.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\PortfolioSection.jsx ---
+import React, { useState, useEffect, useRef } from 'react';
+import { useMarketQuery } from '../hooks/queries';
+import { Link } from 'react-router-dom';
+import GlareHover from './GlareHover';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+const TABS = ['Popularne', 'Nagrody', 'Stablecoiny', 'Ostatnio notowane'];
+
+const PortfolioSection = () => {
+  const [activeTab, setActiveTab] = useState('Popularne');
+  const [cryptos, setCryptos] = useState([]);
+  
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const containerRef = useRef(null);
+  const tabsRef = useRef({});
+
+  const { data: marketData = [], isLoading } = useMarketQuery();
+
+  useEffect(() => {
+    if (marketData.length > 0) {
+      let filtered = marketData;
+      if (activeTab === 'Popularne') {
+        filtered = marketData.slice(0, 6);
+      } else if (activeTab === 'Nagrody') {
+        filtered = marketData.filter(c => ['ETH', 'ADA', 'DOT', 'SOL'].includes(c.symbol.toUpperCase())).slice(0, 6);
+      } else if (activeTab === 'Stablecoiny') {
+        filtered = marketData.filter(c => ['USDT', 'USDC', 'DAI', 'BUSD'].includes(c.symbol.toUpperCase())).slice(0, 6);
+      } else {
+        filtered = marketData.slice(15, 21); // just some other coins
+      }
+      setCryptos(filtered);
+    }
+  }, [marketData, activeTab]);
+
+  useEffect(() => {
+    const activeTabEl = tabsRef.current[activeTab];
+    if (activeTabEl && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const tabRect = activeTabEl.getBoundingClientRect();
+      setIndicatorStyle({
+        left: tabRect.left - containerRect.left,
+        width: tabRect.width
+      });
+    }
+  }, [activeTab]);
+
+  return (
+    <div className="w-full max-w-6xl mx-auto my-12 antialiased">
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <div className="w-full flex justify-center mb-8">
+          <TabsList ref={containerRef} className="nav-pill-container !bg-crypto-card/30 !p-1 border-white/5 h-auto p-0 rounded-full flex relative">
+            <div 
+              className="nav-indicator !bg-crypto-primary/10 !border-crypto-primary/20 absolute transition-all duration-300 ease-out" 
+              style={{ 
+                left: indicatorStyle.left, 
+                width: indicatorStyle.width,
+                height: 'calc(100% - 8px)',
+                top: '4px'
+              }} 
+            />
+            {TABS.map(tab => (
+              <TabsTrigger
+                key={tab}
+                value={tab}
+                ref={el => tabsRef.current[tab] = el}
+                className="relative z-10 px-6 py-2 rounded-full font-medium outline-none text-sm bg-transparent border-transparent data-[state=active]:bg-transparent data-active:bg-transparent data-[state=active]:shadow-none data-active:shadow-none text-gray-400 hover:text-white data-[state=active]:text-crypto-primary data-active:text-crypto-primary transition-colors"
+              >
+                {tab}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+      </Tabs>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? (
+          <div className="col-span-full py-12 flex justify-center">
+            <div className="w-8 h-8 border-2 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+          </div>
+        ) : cryptos.map(coin => {
+          const isUp = coin.price_change_percentage_24h >= 0;
+          return (
+            <Link to={`/coin/${coin.id}`} key={coin.id} className="block group">
+              <GlareHover
+                className="card p-6 flex items-center justify-between hover:scale-[1.02] hover:box-glow-primary transition-all cursor-pointer w-full"
+                glareColor="#00d4ff"
+                glareOpacity={0.2}
+                glareSize={200}
+              >
+                <div className="flex items-center space-x-4">
+                  {coin.image ? (
+                    <img src={coin.image} alt={coin.name} className="w-12 h-12 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_15px_rgba(0,212,255,0.5)] transition-shadow" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center font-bold">{coin.symbol[0]}</div>
+                  )}
+                  <div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-crypto-primary transition-colors">{coin.name}</h3>
+                    <span className="text-sm font-medium text-gray-500 uppercase">{coin.symbol}</span>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <div className="text-lg font-semibold text-white">
+                    ${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </div>
+                  <div className={`text-sm font-bold ${isUp ? 'text-crypto-green text-glow-green' : 'text-crypto-red text-glow-red'}`}>
+                    {isUp ? '+' : ''}{coin.price_change_percentage_24h.toFixed(2)}%
+                  </div>
+                </div>
+              </GlareHover>
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default PortfolioSection;
+
+--- END OF FILE: src\components\PortfolioSection.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ScrollToTopButton.jsx ---
+import { useState, useEffect } from 'react';
+import { ArrowUp } from 'lucide-react';
+
+const ScrollToTopButton = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Show button when page is scrolled down
+  const toggleVisibility = () => {
+    if (window.scrollY > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  // Set the top cordinate to 0
+  // make scrolling smooth
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisibility);
+    return () => {
+      window.removeEventListener('scroll', toggleVisibility);
+    };
+  }, []);
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      <button
+        type="button"
+        onClick={scrollToTop}
+        className={`p-3 rounded-full bg-crypto-primary/10 border border-crypto-primary/30 text-crypto-primary shadow-[0_0_15px_rgba(0,212,255,0.2)] hover:bg-crypto-primary/20 hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:scale-110 transition-all duration-300 ease-in-out cursor-pointer flex items-center justify-center
+          ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="w-6 h-6" />
+      </button>
+    </div>
+  );
+};
+
+export default ScrollToTopButton;
+
+--- END OF FILE: src\components\ScrollToTopButton.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\badge.jsx ---
+import { mergeProps } from "@base-ui/react/merge-props"
+import { useRender } from "@base-ui/react/use-render"
+import { cva } from "class-variance-authority";
+
+import { cn } from "@/lib/utils"
+
+const badgeVariants = cva(
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        secondary:
+          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+        destructive:
+          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+        outline:
+          "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+        ghost:
+          "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+function Badge({
+  className,
+  variant = "default",
+  render,
+  ...props
+}) {
+  return useRender({
+    defaultTagName: "span",
+    props: mergeProps({
+      className: cn(badgeVariants({ variant }), className),
+    }, props),
+    render,
+    state: {
+      slot: "badge",
+      variant,
+    },
+  });
+}
+
+export { Badge, badgeVariants }
+
+--- END OF FILE: src\components\ui\badge.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\button.jsx ---
+import { Button as ButtonPrimitive } from "@base-ui/react/button"
+import { cva } from "class-variance-authority";
+
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        outline:
+          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        ghost:
+          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        destructive:
+          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default:
+          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        icon: "size-8",
+        "icon-xs":
+          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm":
+          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
+        "icon-lg": "size-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}) {
+  return (
+    <ButtonPrimitive
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props} />
+  );
+}
+
+export { Button, buttonVariants }
+
+--- END OF FILE: src\components\ui\button.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\card.jsx ---
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+
+function Card({
+  className,
+  size = "default",
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card"
+      data-size={size}
+      className={cn(
+        "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function CardHeader({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-header"
+      className={cn(
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function CardTitle({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-title"
+      className={cn(
+        "font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function CardDescription({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-description"
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props} />
+  );
+}
+
+function CardAction({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-action"
+      className={cn(
+        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function CardContent({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-content"
+      className={cn("px-4 group-data-[size=sm]/card:px-3", className)}
+      {...props} />
+  );
+}
+
+function CardFooter({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-footer"
+      className={cn(
+        "flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3",
+        className
+      )}
+      {...props} />
+  );
+}
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+}
+
+--- END OF FILE: src\components\ui\card.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\input.jsx ---
+import * as React from "react"
+import { Input as InputPrimitive } from "@base-ui/react/input"
+
+import { cn } from "@/lib/utils"
+
+function Input({
+  className,
+  type,
+  ...props
+}) {
+  return (
+    <InputPrimitive
+      type={type}
+      data-slot="input"
+      className={cn(
+        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        className
+      )}
+      {...props} />
+  );
+}
+
+export { Input }
+
+--- END OF FILE: src\components\ui\input.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\label.jsx ---
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+
+function Label({
+  className,
+  ...props
+}) {
+  return (
+    <label
+      data-slot="label"
+      className={cn(
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className
+      )}
+      {...props} />
+  );
+}
+
+export { Label }
+
+--- END OF FILE: src\components\ui\label.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\table.jsx ---
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+
+function Table({
+  className,
+  ...props
+}) {
+  return (
+    <div data-slot="table-container" className="relative w-full overflow-x-auto">
+      <table
+        data-slot="table"
+        className={cn("w-full caption-bottom text-sm", className)}
+        {...props} />
+    </div>
+  );
+}
+
+function TableHeader({
+  className,
+  ...props
+}) {
+  return (
+    <thead
+      data-slot="table-header"
+      className={cn("[&_tr]:border-b", className)}
+      {...props} />
+  );
+}
+
+function TableBody({
+  className,
+  ...props
+}) {
+  return (
+    <tbody
+      data-slot="table-body"
+      className={cn("[&_tr:last-child]:border-0", className)}
+      {...props} />
+  );
+}
+
+function TableFooter({
+  className,
+  ...props
+}) {
+  return (
+    <tfoot
+      data-slot="table-footer"
+      className={cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className)}
+      {...props} />
+  );
+}
+
+function TableRow({
+  className,
+  ...props
+}) {
+  return (
+    <tr
+      data-slot="table-row"
+      className={cn(
+        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function TableHead({
+  className,
+  ...props
+}) {
+  return (
+    <th
+      data-slot="table-head"
+      className={cn(
+        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function TableCell({
+  className,
+  ...props
+}) {
+  return (
+    <td
+      data-slot="table-cell"
+      className={cn(
+        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function TableCaption({
+  className,
+  ...props
+}) {
+  return (
+    <caption
+      data-slot="table-caption"
+      className={cn("mt-4 text-sm text-muted-foreground", className)}
+      {...props} />
+  );
+}
+
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+}
+
+--- END OF FILE: src\components\ui\table.jsx ---
+
+========================================
+
+--- START OF FILE: src\components\ui\tabs.jsx ---
+import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
+import { cva } from "class-variance-authority";
+
+import { cn } from "@/lib/utils"
+
+function Tabs({
+  className,
+  orientation = "horizontal",
+  ...props
+}) {
+  return (
+    <TabsPrimitive.Root
+      data-slot="tabs"
+      data-orientation={orientation}
+      className={cn("group/tabs flex gap-2 data-horizontal:flex-col", className)}
+      {...props} />
+  );
+}
+
+const tabsListVariants = cva(
+  "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none",
+  {
+    variants: {
+      variant: {
+        default: "bg-muted",
+        line: "gap-1 bg-transparent",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+function TabsList({
+  className,
+  variant = "default",
+  ...props
+}) {
+  return (
+    <TabsPrimitive.List
+      data-slot="tabs-list"
+      data-variant={variant}
+      className={cn(tabsListVariants({ variant }), className)}
+      {...props} />
+  );
+}
+
+function TabsTrigger({
+  className,
+  ...props
+}) {
+  return (
+    <TabsPrimitive.Tab
+      data-slot="tabs-trigger"
+      className={cn(
+        "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
+        "data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground",
+        "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+        className
+      )}
+      {...props} />
+  );
+}
+
+function TabsContent({
+  className,
+  ...props
+}) {
+  return (
+    <TabsPrimitive.Panel
+      data-slot="tabs-content"
+      className={cn("flex-1 text-sm outline-none", className)}
+      {...props} />
+  );
+}
+
+export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants }
+
+--- END OF FILE: src\components\ui\tabs.jsx ---
+
+========================================
+
+--- START OF FILE: src\hooks\queries.js ---
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiService } from '../api/apiService';
+
+// ─── Query Keys ───────────────────────────────────────────────────────────────
+// Centralizacja kluczy cache — ułatwia invalidation i refetch
+export const QUERY_KEYS = {
+  markets:    ['markets'],
+  exchanges:  ['exchanges'],
+  trending:   ['trending'],
+  globalStats: ['globalStats'],
+  watchlist:  ['watchlist'],
+  coinChart:  (id, days) => ['coinChart', id, days],
+};
+
+// ─── Market Data ──────────────────────────────────────────────────────────────
+export const useMarketQuery = () =>
+  useQuery({
+    queryKey: QUERY_KEYS.markets,
+    queryFn: async () => {
+      const res = await apiService.getAllCryptos();
+      return res.data;
+    },
+    staleTime: 60_000,      // dane świeże przez 1 minutę
+    gcTime:    5 * 60_000,  // cache żyje 5 minut po ostatnim użyciu
+  });
+
+// ─── Exchanges ────────────────────────────────────────────────────────────────
+export const useExchangesQuery = () =>
+  useQuery({
+    queryKey: QUERY_KEYS.exchanges,
+    queryFn: async () => {
+      const res = await apiService.getExchanges();
+      return res.data;
+    },
+    staleTime: 5 * 60_000,
+    gcTime:    10 * 60_000,
+  });
+
+// ─── Trending ─────────────────────────────────────────────────────────────────
+export const useTrendingQuery = () =>
+  useQuery({
+    queryKey: QUERY_KEYS.trending,
+    queryFn: async () => {
+      const res = await apiService.getTrending();
+      return res.data;
+    },
+    staleTime: 5 * 60_000,
+  });
+
+// ─── Global Stats ─────────────────────────────────────────────────────────────
+export const useGlobalStatsQuery = () =>
+  useQuery({
+    queryKey: QUERY_KEYS.globalStats,
+    queryFn: async () => {
+      const res = await apiService.getGlobalStats();
+      return res.data;
+    },
+    staleTime: 5 * 60_000,
+  });
+
+// ─── Watchlist ────────────────────────────────────────────────────────────────
+export const useWatchlistQuery = (user) =>
+  useQuery({
+    queryKey: QUERY_KEYS.watchlist,
+    queryFn: async () => {
+      const res = await apiService.getUserWatchlist();
+      return res.data; // string[] z coin_id
+    },
+    enabled:   !!user,    // fetch tylko gdy user jest zalogowany
+    staleTime: 2 * 60_000,
+  });
+
+export const useToggleWatchlistMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ cryptoId, isFaved }) => {
+      if (isFaved) {
+        await apiService.removeFromWatchlist(cryptoId);
+      } else {
+        await apiService.addToWatchlist(cryptoId);
+      }
+    },
+    // Optimistic update — natychmiast aktualizuje UI bez czekania na serwer
+    onMutate: async ({ cryptoId, isFaved }) => {
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.watchlist });
+      const previous = queryClient.getQueryData(QUERY_KEYS.watchlist) ?? [];
+      queryClient.setQueryData(
+        QUERY_KEYS.watchlist,
+        isFaved ? previous.filter(id => id !== cryptoId) : [...previous, cryptoId]
+      );
+      return { previous };
+    },
+    // Rollback przy błędzie
+    onError: (_, __, ctx) => {
+      if (ctx?.previous) {
+        queryClient.setQueryData(QUERY_KEYS.watchlist, ctx.previous);
+      }
+    },
+    // Zawsze resynkronizuj z serwerem po zakończeniu
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.watchlist });
+    },
+  });
+};
+
+// ─── Coin Chart ───────────────────────────────────────────────────────────────
+export const useCoinChartQuery = (id, days) =>
+  useQuery({
+    queryKey: QUERY_KEYS.coinChart(id, days),
+    queryFn: async () => {
+      const res = await apiService.getMarketChart(id, days);
+      return res.data;
+    },
+    enabled:   !!id,
+    staleTime: 5 * 60_000,
+  });
+
+// ─── Auth Mutations ───────────────────────────────────────────────────────────
+export const useLoginMutation = () =>
+  useMutation({
+    mutationFn: async ({ username, password }) => {
+      const res = await apiService.login(username, password);
+      return res.data; // { user, token }
+    },
+  });
+
+export const useRegisterMutation = () =>
+  useMutation({
+    mutationFn: async ({ username, email, password }) => {
+      const res = await apiService.register(username, email, password);
+      return res.data; // { user, token }
+    },
+  });
+
+--- END OF FILE: src\hooks\queries.js ---
+
+========================================
+
+--- START OF FILE: src\lib\utils.js ---
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+--- END OF FILE: src\lib\utils.js ---
+
+========================================
+
+--- START OF FILE: src\pages\CryptoDetailPage.jsx ---
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useStore';
+import { useMarketQuery, useWatchlistQuery, useToggleWatchlistMutation, useCoinChartQuery } from '../hooks/queries';
+import { ArrowLeft, Star, TrendingUp, TrendingDown, Activity, DollarSign, Layers, PieChart, Info, BarChart2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format } from 'date-fns';
+
+const CryptoDetailPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const { data: marketData = [], isLoading: isMarketLoading } = useMarketQuery();
+  const { data: watchlist = [] } = useWatchlistQuery(user);
+  const toggleMutation = useToggleWatchlistMutation();
+  const [timeframe, setTimeframe] = useState(7);
+
+  // Coin lookup from cached market data
+  const coin = marketData.find(c => c.id === id) || null;
+  const isLoading = isMarketLoading;
+
+  // Chart data via TanStack Query — automatyczny cache per (id, days)
+  const { data: rawChart, isLoading: isChartLoading } = useCoinChartQuery(id, timeframe);
+
+  const chartData = React.useMemo(() => {
+    if (!rawChart?.prices) return [];
+    let xFormat = 'dd MMM';
+    if (timeframe === 1) xFormat = 'HH:mm';
+    if (timeframe === 365) xFormat = 'MMM yyyy';
+    return rawChart.prices.map(item => ({
+      time: item[0],
+      dateLabelX: format(new Date(item[0]), xFormat),
+      dateLabelTooltip: format(new Date(item[0]), 'dd MMM HH:mm'),
+      price: item[1],
+    }));
+  }, [rawChart, timeframe]);
+
+  if (isLoading || (marketData.length === 0 && !coin)) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="w-12 h-12 border-4 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!coin && marketData.length > 0) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-3xl font-bold text-white mb-4">Nie znaleziono waluty</h2>
+        <p className="text-gray-400 mb-8">Waluta o ID &quot;{id}&quot; nie istnieje w bazie CoinGecko lub nie została pobrana.</p>
+        <Button asChild className="bg-crypto-primary hover:bg-crypto-primary/80 text-black font-bold">
+          <Link to="/">Wróć na Rynek</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  if (!coin) return null;
+
+  const isUp24h = coin.price_change_percentage_24h >= 0;
+  const isUpATH = coin.ath_change_percentage >= 0;
+  const isUpATL = coin.atl_change_percentage >= 0;
+  const isFaved = watchlist.includes(coin.id);
+
+  const isChartUp = chartData.length > 0
+    ? chartData[chartData.length - 1].price >= chartData[0].price
+    : isUp24h;
+
+  const formatCurrency = (val) => {
+     if (val === null || val === undefined) return 'Brak Danych';
+     
+     // Specjalny przypadek dla malenkich wartosci (np. shiba inu, dogecoin)
+     if (Math.abs(val) < 0.01 && val !== 0) {
+        return '$' + val.toLocaleString(undefined, { 
+            minimumFractionDigits: 2, 
+            maximumSignificantDigits: 3 
+        });
+     }
+     
+     // Standardowe formatowanie (2 miejsca po przecinku)
+     return '$' + val.toLocaleString(undefined, { 
+         minimumFractionDigits: 2, 
+         maximumFractionDigits: 2 
+     });
+  };
+
+  const handleStarClick = () => {
+    if (!user) { navigate('/login'); return; }
+    toggleMutation.mutate({ cryptoId: coin.id, isFaved: watchlist.includes(coin.id) });
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in antialiased z-10 relative">
+      
+      {/* Nagłówek i Powrót */}
+      <div className="flex items-center justify-between">
+        <Button asChild variant="ghost" className="text-crypto-primary hover:text-crypto-primary/70 hover:bg-crypto-primary/10 transition-colors pl-2">
+          <Link to="/">
+            <ArrowLeft size={20} className="mr-2" />
+            Wróć na Rynek
+          </Link>
+        </Button>
+        <Button 
+           onClick={handleStarClick}
+           variant="outline"
+           className="flex items-center gap-2 bg-crypto-card/60 backdrop-blur-md px-4 py-2 hover:bg-crypto-card/80 transition-colors rounded-full border-gray-800"
+        >
+          <Star size={20} className={`${isFaved ? 'text-crypto-yellow text-glow-yellow fill-crypto-yellow' : 'text-gray-400'}`} />
+          <span className="text-gray-300 font-medium">{isFaved ? 'W Ulubionych' : 'Dodaj do Obserwowanych'}</span>
+        </Button>
+      </div>
+
+      {/* Hero Karty */}
+      <div className="card p-6 sm:p-12 relative overflow-hidden group border border-crypto-primary/20 hover:border-crypto-primary/50 transition-colors">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-crypto-primary/10 rounded-full blur-[100px] -mr-16 -mt-16 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-crypto-purple/10 rounded-full blur-[100px] -ml-16 -mb-16 pointer-events-none"></div>
+        
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+                <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-900 border-2 border-crypto-primary/30 p-2 shadow-[0_0_30px_rgba(0,212,255,0.2)]">
+                  {coin.image && <img src={coin.image} alt={coin.name} className="w-full h-full object-contain rounded-full" />}
+                </div>
+                <div>
+                   <div className="flex items-center justify-center sm:justify-start gap-3 mb-2">
+                       <span className="px-3 py-1 bg-crypto-primary/20 text-crypto-primary text-xs font-bold uppercase rounded-full tracking-wider border border-crypto-primary/30">
+                           Rank #{coin.market_cap_rank || '-'}
+                       </span>
+                       <span className="text-gray-400 font-bold uppercase tracking-widest">{coin.symbol}</span>
+                   </div>
+                   <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight drop-shadow-lg">{coin.name}</h1>
+                </div>
+            </div>
+
+            <div className="text-center md:text-right mt-4 md:mt-0">
+                <p className="text-gray-400 text-sm font-medium uppercase tracking-wider mb-2">Aktualna Cena</p>
+                <div className="text-4xl sm:text-6xl font-black text-white drop-shadow-lg mb-4">
+                  {formatCurrency(coin.current_price)}
+                </div>
+                <div className={`inline-flex items-center px-4 py-2 rounded-full text-base sm:text-lg font-bold border ${isUp24h ? 'bg-crypto-green/10 text-crypto-green border-crypto-green/30 text-glow-green' : 'bg-crypto-red/10 text-crypto-red border-crypto-red/30 text-glow-red'}`}>
+                  {isUp24h ? <TrendingUp size={24} className="mr-2" /> : <TrendingDown size={24} className="mr-2" />}
+                  {isUp24h ? '+' : ''}{coin.price_change_percentage_24h?.toFixed(2)}% (24h)
+                </div>
+            </div>
+        </div>
+      </div>
+
+      {/* Wykres Historyczny */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-12 mb-4 gap-4">
+         <h2 className="text-2xl font-bold text-white flex items-center">
+            <BarChart2 className="mr-3 text-crypto-primary" /> Wykres Historyczny
+         </h2>
+         <div className="flex bg-gray-900/50 rounded-lg p-1 border border-gray-800 self-start sm:self-auto">
+            {[
+              { label: '24h', value: 1 },
+              { label: '7D', value: 7 },
+              { label: '30D', value: 30 },
+              { label: '1Y', value: 365 },
+            ].map(tf => (
+               <Button
+                  key={tf.value}
+                  variant="ghost"
+                  onClick={() => setTimeframe(tf.value)}
+                  className={`px-4 py-1.5 h-auto text-sm font-bold rounded-md transition-all ${timeframe === tf.value ? 'bg-crypto-primary text-gray-900 shadow-[0_0_10px_rgba(0,212,255,0.4)] hover:bg-crypto-primary hover:text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+               >
+                  {tf.label}
+               </Button>
+            ))}
+         </div>
+      </div>
+      <div className="card p-4 sm:p-6 w-full h-[400px] border border-crypto-primary/10">
+        {isChartLoading ? (
+           <div className="w-full h-full flex items-center justify-center">
+             <div className="w-8 h-8 border-2 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+           </div>
+        ) : chartData.length > 0 ? (
+           <ResponsiveContainer width="100%" height="100%" minWidth={1}>
+             <AreaChart data={chartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+               <defs>
+                 <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                   {isChartUp 
+                      ? <><stop offset="5%" stopColor="#00E676" stopOpacity={0.8}/><stop offset="95%" stopColor="#00E676" stopOpacity={0}/></>
+                      : <><stop offset="5%" stopColor="#ff4d4f" stopOpacity={0.8}/><stop offset="95%" stopColor="#ff4d4f" stopOpacity={0}/></>
+                   }
+                 </linearGradient>
+               </defs>
+               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+               <XAxis 
+                  dataKey="dateLabelX" 
+                  stroke="rgba(255,255,255,0.3)" 
+                  tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} 
+                  tickMargin={12}
+                  minTickGap={45}
+               />
+               <YAxis 
+                  domain={['auto', 'auto']} 
+                  stroke="rgba(255,255,255,0.3)" 
+                  tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}}
+                  tickFormatter={(val) => '$' + val.toLocaleString()}
+                  width={80}
+                  orientation="right"
+               />
+               <Tooltip 
+                  contentStyle={{ backgroundColor: 'rgba(11, 15, 25, 0.95)', border: '1px solid rgba(0, 212, 255, 0.3)', borderRadius: '12px', boxShadow: '0 0 20px rgba(0, 212, 255, 0.2)' }}
+                  itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+                  labelStyle={{ color: '#00d4ff', marginBottom: '4px' }}
+                  formatter={(value) => [formatCurrency(value), 'Cena']}
+                  labelFormatter={(_label, payload) => {
+                     if (payload && payload.length > 0) {
+                        return payload[0].payload.dateLabelTooltip;
+                     }
+                     return _label;
+                  }}
+               />
+               <Area 
+                  type="monotone" 
+                  dataKey="price" 
+                  stroke={isChartUp ? '#00E676' : '#ff4d4f'} 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorPrice)" 
+               />
+             </AreaChart>
+           </ResponsiveContainer>
+        ) : (
+           <div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
+             Brak danych wykresu dla tej pory.
+           </div>
+        )}
+      </div>
+
+      {/* Siatka Statystyk */}
+      <h2 className="text-2xl font-bold text-white mb-4 mt-12 flex items-center">
+         <Activity className="mr-3 text-crypto-primary" /> Szczegółowe Statystyki i Rynek
+      </h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+         {/* 1 */}
+         <div className="card p-6 border-l-4 border-crypto-purple hover:-translate-y-1 transition-transform overflow-hidden">
+             <div className="flex items-center text-gray-400 mb-2 whitespace-nowrap">
+                 <PieChart size={18} className="mr-2 text-crypto-purple flex-shrink-0" />
+                 <span className="text-sm font-medium uppercase tracking-wider truncate">Kapitalizacja (Limit)</span>
+             </div>
+             <div className="text-2xl font-bold text-white truncate" title={formatCurrency(coin.market_cap)}>{formatCurrency(coin.market_cap)}</div>
+             <div className="text-xs text-gray-500 mt-1">Market Cap</div>
+         </div>
+         
+         {/* 2 */}
+         <div className="card p-6 border-l-4 border-crypto-green hover:-translate-y-1 transition-transform overflow-hidden">
+             <div className="flex items-center text-gray-400 mb-2 whitespace-nowrap">
+                 <DollarSign size={18} className="mr-2 text-crypto-green flex-shrink-0" />
+                 <span className="text-sm font-medium uppercase tracking-wider truncate">Wolumen (24h)</span>
+             </div>
+             <div className="text-2xl font-bold text-white truncate" title={formatCurrency(coin.total_volume)}>{formatCurrency(coin.total_volume)}</div>
+             <div className="text-xs text-gray-500 mt-1">Total Volume</div>
+         </div>
+
+         {/* 3 */}
+         <div className="card p-6 border-l-4 border-crypto-primary hover:-translate-y-1 transition-transform overflow-hidden">
+             <div className="flex items-center text-gray-400 mb-2 whitespace-nowrap">
+                 <TrendingUp size={18} className="mr-2 text-crypto-primary flex-shrink-0" />
+                 <span className="text-sm font-medium uppercase tracking-wider truncate">H Najwyższa (24h)</span>
+             </div>
+             <div className="text-2xl font-bold text-gray-200 truncate" title={formatCurrency(coin.high_24h)}>{formatCurrency(coin.high_24h)}</div>
+         </div>
+
+         {/* 4 */}
+         <div className="card p-6 border-l-4 border-crypto-red hover:-translate-y-1 transition-transform overflow-hidden">
+             <div className="flex items-center text-gray-400 mb-2 whitespace-nowrap">
+                 <TrendingDown size={18} className="mr-2 text-crypto-red flex-shrink-0" />
+                 <span className="text-sm font-medium uppercase tracking-wider truncate">L Najniższa (24h)</span>
+             </div>
+             <div className="text-2xl font-bold text-gray-200 truncate" title={formatCurrency(coin.low_24h)}>{formatCurrency(coin.low_24h)}</div>
+         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+         {/* ATH */}
+         <div className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card relative overflow-hidden">
+             <div className="flex items-center text-gray-400 mb-4">
+                 <Star size={20} className="mr-2 text-crypto-yellow" />
+                 <span className="text-sm font-bold uppercase tracking-wider">All Time High (ATH)</span>
+             </div>
+             <div className="text-3xl font-black text-white mb-2">{formatCurrency(coin.ath)}</div>
+             <div className={`text-sm font-bold flex items-center mb-4 ${isUpATH ? 'text-crypto-green' : 'text-crypto-red'}`}>
+                  {isUpATH ? 'Ponad ATH: ' : 'Od ATH: '} {coin.ath_change_percentage?.toFixed(2)}%
+             </div>
+             <div className="text-xs text-gray-500">
+                  Data rekordu: {coin.ath_date ? new Date(coin.ath_date).toLocaleDateString('pl-PL') : 'Brak danych'}
+             </div>
+         </div>
+
+         {/* ATL */}
+         <div className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card relative overflow-hidden">
+             <div className="flex items-center text-gray-400 mb-4">
+                 <Info size={20} className="mr-2 text-gray-500" />
+                 <span className="text-sm font-bold uppercase tracking-wider">All Time Low (ATL)</span>
+             </div>
+             <div className="text-3xl font-black text-white mb-2">{formatCurrency(coin.atl)}</div>
+             <div className={`text-sm font-bold flex items-center mb-4 ${isUpATL ? 'text-crypto-green' : 'text-crypto-red'}`}>
+                  {isUpATL ? 'Od ATL: ' : 'Poniżej ATL: '} +{coin.atl_change_percentage?.toLocaleString(undefined, { maximumFractionDigits: 0})}%
+             </div>
+             <div className="text-xs text-gray-500">
+                  Data dołka: {coin.atl_date ? new Date(coin.atl_date).toLocaleDateString('pl-PL') : 'Brak danych'}
+             </div>
+         </div>
+      </div>
+
+      {/* Podaż */}
+      <div className="card p-8 mt-4 border border-gray-800">
+         <div className="flex items-center text-gray-300 mb-6">
+            <Layers size={22} className="mr-3 text-crypto-primary" />
+            <h3 className="text-xl font-bold uppercase tracking-widest">Zasoby i Podaż (Supply)</h3>
+         </div>
+         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+               <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">W Obiegu (Circulating)</p>
+               <p className="text-xl font-medium text-gray-100">{coin.circulating_supply?.toLocaleString() || 'Brak danych'}</p>
+            </div>
+            <div>
+               <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Całkowita (Total)</p>
+               <p className="text-xl font-medium text-gray-100">{coin.total_supply?.toLocaleString() || 'Brak danych'}</p>
+            </div>
+            <div>
+               <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Maksymalna (Max)</p>
+               <p className="text-xl font-medium text-gray-100">{coin.max_supply?.toLocaleString() || 'Bez limitu (Brak danych)'}</p>
+            </div>
+         </div>
+         {coin.max_supply && coin.circulating_supply && (
+           <div className="mt-6">
+             <div className="w-full bg-gray-800 rounded-full h-2.5">
+                <div className="bg-crypto-primary h-2.5 rounded-full" style={{ width: `${(coin.circulating_supply / coin.max_supply) * 100}%` }}></div>
+             </div>
+             <p className="text-right text-xs text-gray-500 mt-2">{((coin.circulating_supply / coin.max_supply) * 100).toFixed(1)}% wykopane</p>
+           </div>
+         )}
+      </div>
+
+    </div>
+  );
+};
+
+export default CryptoDetailPage;
+
+--- END OF FILE: src\pages\CryptoDetailPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\pages\ExchangesPage.jsx ---
+import React, { useState, useMemo } from 'react';
+import { useExchangesQuery } from '../hooks/queries';
+import { ShieldAlert, ShieldCheck, Globe, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+
+const ExchangesPage = () => {
+  const { data: exchanges = [], isLoading, error: queryError } = useExchangesQuery();
+  const error = queryError?.message;
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'desc' });
+
+  const requestSort = (key) => {
+    let direction = 'desc';
+    if (sortConfig.key === key && sortConfig.direction === 'desc') {
+      direction = 'asc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedExchanges = useMemo(() => {
+    let sortableItems = [...exchanges];
+    if (sortConfig.key) {
+      sortableItems.sort((a, b) => {
+        let aValue = a[sortConfig.key];
+        let bValue = b[sortConfig.key];
+
+        if (aValue === null || aValue === undefined) aValue = 0;
+        if (bValue === null || bValue === undefined) bValue = 0;
+
+        if (sortConfig.key === 'name') {
+           aValue = String(aValue).toLowerCase();
+           bValue = String(bValue).toLowerCase();
+        }
+
+        if (aValue < bValue) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [exchanges, sortConfig]);
+
+  const getSortIcon = (columnKey) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown size={14} className="ml-1 opacity-40 group-hover:opacity-100 transition-opacity" />;
+    return sortConfig.direction === 'asc' 
+      ? <ArrowUp size={14} className="ml-1 text-crypto-primary text-glow-primary" /> 
+      : <ArrowDown size={14} className="ml-1 text-crypto-primary text-glow-primary" />;
+  };
+
+  const getTrustScoreColor = (score) => {
+    if (score >= 9) return 'text-crypto-green text-glow-green';
+    if (score >= 6) return 'text-crypto-yellow text-glow-yellow';
+    return 'text-crypto-red text-glow-red';
+  };
+
+  return (
+    <div className="space-y-12 animate-fade-in antialiased">
+      {/* Hero Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10 mb-8 max-w-6xl mx-auto">
+        <div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">
+            Najlepsze <span className="text-crypto-primary text-glow-primary">Giełdy</span>
+          </h1>
+          <p className="text-gray-400 text-lg max-w-2xl">
+            Ranking światowych giełd kryptowalut. Sprawdź volumen 24h i wskaźnik wiarygodności (Trust Score).
+          </p>
+        </div>
+      </div>
+
+      {/* Main Table */}
+      <div className="relative z-10 mt-8 max-w-6xl mx-auto">
+        <div className="overflow-x-auto bg-crypto-card/60 backdrop-blur-xl border border-gray-800/80 hover:box-glow-primary transition-shadow duration-500 rounded-2xl">
+          <Table>
+            <TableHeader className="bg-gray-900/20">
+              <TableRow className="border-gray-800/50 hover:bg-transparent">
+                <TableHead className="w-16 text-center text-gray-400">#</TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:text-crypto-primary transition-colors group select-none text-gray-400"
+                  onClick={() => requestSort('name')}
+                >
+                  <div className="flex items-center">Giełda {getSortIcon('name')}</div>
+                </TableHead>
+                <TableHead 
+                  className="text-center cursor-pointer hover:text-crypto-primary transition-colors group select-none text-gray-400"
+                  onClick={() => requestSort('trust_score')}
+                >
+                  <div className="flex items-center justify-center">Trust Score {getSortIcon('trust_score')}</div>
+                </TableHead>
+                <TableHead 
+                  className="text-right cursor-pointer hover:text-crypto-primary transition-colors group select-none text-gray-400"
+                  onClick={() => requestSort('trade_volume_24h_btc')}
+                >
+                  <div className="flex items-center justify-end">Wolumen 24h (BTC) {getSortIcon('trade_volume_24h_btc')}</div>
+                </TableHead>
+                <TableHead className="text-right text-gray-400">Lokalizacja</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow className="border-b-0 hover:bg-transparent">
+                  <TableCell colSpan={5} className="h-24 text-center text-gray-500">
+                    <div className="flex justify-center mb-2">
+                      <div className="w-6 h-6 border-2 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+                    </div>
+                    Ładowanie rankingów...
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow className="border-b-0 hover:bg-transparent">
+                  <TableCell colSpan={5} className="h-24 text-center text-red-500">
+                    <div className="bg-red-500/10 rounded-lg p-4 max-w-lg mx-auto border border-red-500/30">
+                      <p className="font-medium mb-1">⚠ Błąd pobierania danych</p>
+                      <p className="text-sm text-red-400">{error}</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : sortedExchanges.length > 0 ? (
+                sortedExchanges.map((exchange) => (
+                  <TableRow 
+                    key={exchange.id} 
+                    onClick={() => window.open(exchange.url, '_blank')}
+                    className="hover:bg-crypto-primary/10 transition-all cursor-pointer duration-300 group border-gray-800/30 data-[state=selected]:bg-transparent hover:shadow-[inset_4px_0_0_rgba(0,212,255,1)]"
+                  >
+                    <TableCell className="text-center text-gray-500 font-bold">
+                       {exchange.trust_score_rank || '-'}
+                    </TableCell>
+                    <TableCell className="flex items-center space-x-4">
+                      <div className="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center bg-gray-800 overflow-hidden shadow-[0_0_10px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_15px_rgba(0,212,255,0.6)] transition-shadow duration-300">
+                         {exchange.image ? (
+                           <img src={exchange.image} alt={exchange.name} className="w-full h-full object-cover" />
+                         ) : (
+                           <span className="text-sm font-bold text-gray-300">{exchange.name[0]}</span>
+                         )}
+                      </div>
+                      <div>
+                        <div className="font-bold text-lg text-white group-hover:text-crypto-primary transition-colors">{exchange.name}</div>
+                        <div className="text-xs text-crypto-primary/70 font-bold">{exchange.year_established ? `Rozpoczęcie: ${exchange.year_established}` : 'Nieznana data'}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                       <Badge variant="outline" className={`font-black border-none text-sm px-2 py-1 bg-black/40 ${getTrustScoreColor(exchange.trust_score)}`}>
+                          <div className="flex items-center justify-center gap-1">
+                            {exchange.trust_score >= 8 ? <ShieldCheck size={16} /> : <ShieldAlert size={16} />}
+                            {exchange.trust_score}/10
+                          </div>
+                       </Badge>
+                    </TableCell>
+                    <TableCell className="text-right font-bold text-lg text-gray-100">
+                      {exchange.trade_volume_24h_btc ? 
+                          parseFloat(exchange.trade_volume_24h_btc).toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' BTC'
+                        : 'Brak'
+                      }
+                    </TableCell>
+                    <TableCell className="text-right text-gray-400">
+                      <div className="flex items-center justify-end gap-2">
+                        <Globe size={16} className="text-gray-500 group-hover:text-crypto-primary/70" />
+                        {exchange.country || 'Globalna'}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow className="border-b-0 hover:bg-transparent">
+                  <TableCell colSpan={5} className="h-24 text-center text-gray-500">
+                    Brak wyników giełdowych.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ExchangesPage;
+
+--- END OF FILE: src\pages\ExchangesPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\pages\FavoritesPage.jsx ---
+import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuthStore } from '../store/useStore';
+import { useMarketQuery, useWatchlistQuery, useToggleWatchlistMutation } from '../hooks/queries';
+import { Star, TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+
+const FavoritesPage = () => {
+  const { user } = useAuthStore();
+  const { data: cryptos = [], isLoading: loading, error: queryError } = useMarketQuery();
+  const { data: watchlist = [] } = useWatchlistQuery(user);
+  const toggleMutation = useToggleWatchlistMutation();
+  const navigate = useNavigate();
+
+  const error = queryError?.message;
+  const favoriteCryptos = cryptos.filter(c => watchlist.includes(c.id));
+
+  const handleToggleStar = (cryptoId) => {
+    toggleMutation.mutate({ cryptoId, isFaved: watchlist.includes(cryptoId) });
+  };
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 max-w-6xl mx-auto">
+        <div className="relative mb-8">
+          <div className="absolute inset-0 bg-crypto-primary/20 rounded-full blur-2xl animate-pulse"></div>
+          <div className="relative bg-crypto-card/80 backdrop-blur-xl border border-gray-800 p-8 rounded-full shadow-2xl">
+            <Star size={64} className="text-gray-600" />
+          </div>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
+          Twoje <span className="text-crypto-primary text-glow-primary">Ulubione</span>
+        </h1>
+        <p className="text-gray-400 text-lg mb-8 max-w-md mx-auto">
+          Nie jesteś zalogowany. Aby móc dodawać i przeglądać swoje ulubione kryptowaluty, musisz posiadać konto.
+        </p>
+        <Button asChild className="py-6 px-8 text-lg font-semibold flex items-center space-x-2 group bg-crypto-primary text-black hover:bg-crypto-primary/80">
+          <Link to="/login"><span>Zaloguj się</span><span className="group-hover:translate-x-1 transition-transform">→</span></Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+        <div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">Twoje <span className="text-crypto-purple text-glow-purple">Ulubione</span></h1>
+          <p className="text-gray-400 text-lg">Zarządzaj swoimi wybranymi kryptowalutami</p>
+        </div>
+      </div>
+      <div className="relative z-10 card overflow-hidden bg-crypto-card/60 backdrop-blur-xl border border-gray-800/80 hover:box-glow-purple transition-shadow duration-500 rounded-2xl">
+        {loading ? (
+          <div className="p-12 text-center text-gray-500">
+            <div className="flex justify-center mb-4"><div className="w-8 h-8 border-2 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div></div>
+            Ładowanie twojej listy...
+          </div>
+        ) : error ? (
+          <div className="p-12 text-center text-red-500">
+            <div className="bg-red-500/10 rounded-lg p-4 max-w-lg mx-auto border border-red-500/30">
+              <p className="font-medium mb-1">⚠ Błąd pobierania danych</p>
+              <p className="text-sm text-red-400">{error}</p>
+            </div>
+          </div>
+        ) : favoriteCryptos.length > 0 ? (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-gray-900/20">
+                <TableRow className="border-gray-800/50 hover:bg-transparent">
+                  <TableHead className="w-12"></TableHead>
+                  <TableHead className="text-gray-400">Nazwa</TableHead>
+                  <TableHead className="text-right text-gray-400">Cena</TableHead>
+                  <TableHead className="text-right text-gray-400">Zmiana 24h</TableHead>
+                  <TableHead className="text-center w-24 text-gray-400">Akcje</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {favoriteCryptos.map((coin) => {
+                  const isUp = coin.price_change_percentage_24h >= 0;
+                  return (
+                    <TableRow key={coin.id} onClick={() => navigate(`/coin/${coin.id}`)}
+                      className="hover:bg-crypto-purple/10 transition-all cursor-pointer duration-300 group border-gray-800/30 data-[state=selected]:bg-transparent hover:shadow-[inset_4px_0_0_rgba(176,38,255,1)]">
+                      <TableCell>
+                        <button onClick={(e) => { e.stopPropagation(); handleToggleStar(coin.id); }}
+                          className="transition-colors focus:outline-none focus:ring-2 focus:ring-crypto-purple/50 text-crypto-yellow text-glow-yellow hover:text-gray-600 rounded-full p-1.5">
+                          <Star size={22} fill="currentColor" />
+                        </button>
+                      </TableCell>
+                      <TableCell className="flex items-center space-x-4">
+                        <div className="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center bg-gray-800 overflow-hidden group-hover:shadow-[0_0_15px_rgba(176,38,255,0.6)] transition-shadow duration-300">
+                          {coin.image ? <img src={coin.image} alt={coin.name} className="w-full h-full object-cover" /> : <span className="text-sm font-bold text-gray-300">{coin.symbol[0]}</span>}
+                        </div>
+                        <div>
+                          <div className="font-bold text-lg text-white group-hover:text-crypto-purple transition-colors">{coin.name}</div>
+                          <div className="text-xs text-crypto-purple/70 font-bold uppercase tracking-wider">{coin.symbol}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right font-bold text-lg text-gray-100">
+                        ${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className={`flex items-center justify-end space-x-1.5 font-bold text-lg ${isUp ? 'text-crypto-green text-glow-green' : 'text-crypto-red text-glow-red'}`}>
+                          {isUp ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+                          <span>{Math.abs(coin.price_change_percentage_24h).toFixed(2)}%</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button variant="ghost" onClick={(e) => { e.stopPropagation(); navigate(`/coin/${coin.id}`); }}
+                          className="text-gray-400 hover:text-crypto-purple transition-colors rounded-full hover:bg-crypto-purple/20 p-2 h-auto">
+                          <BarChart2 size={18} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        ) : (
+          <div className="p-16 text-center text-gray-400 flex flex-col items-center">
+            <Star className="text-gray-700 mb-4" size={48} />
+            <h3 className="text-xl font-medium text-white mb-2">Twoja lista jest pusta</h3>
+            <p className="mb-6">Dodaj pierwsze kryptowaluty do obserwowanych z zakładki Rynek.</p>
+            <Button asChild className="bg-crypto-primary hover:bg-crypto-primary/80 text-black font-bold px-8 py-6 text-lg">
+              <Link to="/">Przeglądaj Rynek</Link>
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default FavoritesPage;
+
+--- END OF FILE: src\pages\FavoritesPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\pages\LoginPage.jsx ---
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuthStore } from '../store/useStore';
+import { useLoginMutation, QUERY_KEYS } from '../hooks/queries';
+import { useQueryClient } from '@tanstack/react-query';
+import { Lock, Mail, ChevronLeft, Loader2 } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+
+const LoginPage = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { setUser } = useAuthStore();
+  const loginMutation = useLoginMutation();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    loginMutation.mutate({ username, password }, {
+      onSuccess: (data) => {
+        localStorage.setItem('crypto_pulse_token', data.token);
+        setUser(data.user);
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.watchlist });
+        navigate('/');
+      },
+    });
+  };
+
+  const isLoading = loginMutation.isPending;
+  const error = loginMutation.error?.message;
+
+  return (
+    <div className="container relative min-h-[calc(100vh-160px)] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-1 lg:px-0">
+      <Link
+        to="/"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors z-20"
+      >
+        <ChevronLeft className="mr-2 h-4 w-4" />
+        Powrót
+      </Link>
+
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] relative z-10">
+        <Card className="border-white/10 bg-crypto-card/40 backdrop-blur-xl shadow-2xl overflow-hidden">
+          {/* Accent Line */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-crypto-primary to-crypto-purple opacity-50" />
+          
+          <CardHeader className="space-y-1 text-center pt-8">
+            <CardTitle className="text-3xl font-bold tracking-tight text-white">Logowanie</CardTitle>
+            <CardDescription className="text-gray-400">
+              Wprowadź swoje dane, aby przejść do panelu
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent className="grid gap-4">
+            {error && (
+              <div className="p-3 text-xs font-medium bg-destructive/10 border border-destructive/20 text-destructive rounded-md text-center animate-in fade-in zoom-in duration-300">
+                {error}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-2">
+                <Label htmlFor="username" className="text-gray-300 ml-1">Nazwa użytkownika</Label>
+                <div className="relative">
+                   <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                   <Input
+                    id="username"
+                    placeholder="jan_kowalski"
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="username"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="pl-10 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between ml-1">
+                  <Label htmlFor="password" title="password" className="text-gray-300">Hasło</Label>
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    disabled={isLoading}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50"
+                    required
+                  />
+                </div>
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full h-11 bg-crypto-primary text-black hover:bg-crypto-primary/80 font-bold transition-all shadow-[0_0_20px_rgba(0,212,255,0.2)] mt-2" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Zaloguj się"
+                )}
+              </Button>
+            </form>
+          </CardContent>
+          
+          <CardFooter className="flex flex-col gap-4 pb-8 pt-2">
+             <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-white/5" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-transparent px-2 text-muted-foreground">Nowy użytkownik?</span>
+              </div>
+            </div>
+            <Button variant="outline" asChild className="w-full border-white/5 bg-white/5 hover:bg-white/10 text-white h-11">
+              <Link to="/register">Stwórz nowe konto</Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
+
+--- END OF FILE: src\pages\LoginPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\pages\MarketPage.jsx ---
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useStore';
+import { useMarketQuery, useWatchlistQuery, useToggleWatchlistMutation } from '../hooks/queries';
+import { Star, TrendingUp, TrendingDown, Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import PortfolioSection from '../components/PortfolioSection';
+import AnimatedHeroTitle from '../components/AnimatedHeroTitle';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+
+const MarketPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
+  const { user } = useAuthStore();
+  const { data: cryptos = [], isLoading: loading, error: queryError } = useMarketQuery();
+  const { data: watchlist = [] } = useWatchlistQuery(user);
+  const toggleMutation = useToggleWatchlistMutation();
+  const navigate = useNavigate();
+
+  const error = queryError?.message;
+
+  const handleToggleStar = (cryptoId) => {
+    if (!user) { navigate('/login'); return; }
+    toggleMutation.mutate({ cryptoId, isFaved: watchlist.includes(cryptoId) });
+  };
+
+  const requestSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedAndFilteredCryptos = React.useMemo(() => {
+    let items = cryptos.filter(c =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (sortConfig.key) {
+      items.sort((a, b) => {
+        let aValue, bValue;
+        if (sortConfig.key === 'name') {
+          aValue = a.name.toLowerCase();
+          bValue = b.name.toLowerCase();
+        } else if (sortConfig.key === 'price') {
+          aValue = a.current_price;
+          bValue = b.current_price;
+        } else if (sortConfig.key === 'change') {
+          aValue = a.price_change_percentage_24h;
+          bValue = b.price_change_percentage_24h;
+        }
+
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+    return items;
+  }, [cryptos, searchTerm, sortConfig]);
+
+  const getSortIcon = (columnKey) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown size={14} className="ml-1 opacity-40 group-hover:opacity-100 transition-opacity" />;
+    return sortConfig.direction === 'asc'
+      ? <ArrowUp size={14} className="ml-1 text-crypto-primary text-glow-primary" />
+      : <ArrowDown size={14} className="ml-1 text-crypto-primary text-glow-primary" />;
+  };
+
+  return (
+    <div className="space-y-12">
+
+      {/* Hero Section / Title */}
+      <div className="flex flex-col items-center justify-center relative z-10 px-2 sm:px-0 mb-12 text-center max-w-6xl mx-auto">
+        <AnimatedHeroTitle />
+        <p className="text-gray-300 text-lg sm:text-xl md:text-2xl font-medium tracking-wide mt-4">Aktualne kursy i notowania największych walut</p>
+      </div>
+
+      {/* Portfolio Section */}
+      <PortfolioSection />
+
+      {/* Main Table */}
+      <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="flex flex-col items-center justify-center gap-6 mb-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            Wszystkie <span className="text-crypto-primary text-glow-primary">Kryptowaluty</span>
+          </h2>
+
+          <div className="relative w-full max-w-md group mx-auto">
+            <div className="absolute inset-0 bg-crypto-primary/20 rounded-lg blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
+            <Search className="absolute left-4 top-3.5 text-crypto-primary z-10" size={20} />
+            <Input
+              type="text"
+              placeholder="Szukaj waluty..."
+              className="pl-12 py-6 text-lg bg-crypto-card/80 backdrop-blur-md relative z-10 w-full border-white/10 focus-visible:ring-crypto-primary/50 text-white"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="overflow-x-auto bg-crypto-card/60 backdrop-blur-xl border border-gray-800/80 hover:box-glow-primary transition-shadow duration-500 rounded-2xl">
+          <Table>
+            <TableHeader className="bg-gray-900/20">
+              <TableRow className="border-gray-800/50 hover:bg-transparent">
+                <TableHead className="w-12 text-center"></TableHead>
+                <TableHead
+                  className="cursor-pointer hover:text-crypto-primary transition-colors group select-none text-gray-400"
+                  onClick={() => requestSort('name')}
+                >
+                  <div className="flex items-center">Nazwa {getSortIcon('name')}</div>
+                </TableHead>
+                <TableHead
+                  className="text-right cursor-pointer hover:text-crypto-primary transition-colors group select-none text-gray-400"
+                  onClick={() => requestSort('price')}
+                >
+                  <div className="flex items-center justify-end">Cena {getSortIcon('price')}</div>
+                </TableHead>
+                <TableHead
+                  className="text-right cursor-pointer hover:text-crypto-primary transition-colors group select-none text-gray-400"
+                  onClick={() => requestSort('change')}
+                >
+                  <div className="flex items-center justify-end">Zmiana 24h {getSortIcon('change')}</div>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow className="border-b-0 hover:bg-transparent">
+                  <TableCell colSpan={4} className="h-24 text-center text-gray-500">
+                    <div className="flex justify-center mb-2">
+                      <div className="w-6 h-6 border-2 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+                    </div>
+                    Ładowanie danych rynkowych...
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow className="border-b-0 hover:bg-transparent">
+                  <TableCell colSpan={4} className="h-24 text-center text-red-500">
+                    <div className="bg-red-500/10 rounded-lg p-4 max-w-lg mx-auto border border-red-500/30">
+                      <p className="font-medium mb-1">⚠ Błąd pobierania danych</p>
+                      <p className="text-sm text-red-400">{error}</p>
+                      <p className="text-xs text-red-400/70 mt-2">Darmowe API CoinGecko ma ograniczenia zapytań. Spróbuj odświeżyć za chwilę.</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : sortedAndFilteredCryptos.length > 0 ? (
+                sortedAndFilteredCryptos.map((coin) => {
+                  const isFaved = watchlist.includes(coin.id);
+                  const isUp = coin.price_change_percentage_24h >= 0;
+
+                  return (
+                    <TableRow
+                      key={coin.id}
+                      onClick={() => navigate(`/coin/${coin.id}`)}
+                      className="hover:bg-crypto-primary/10 transition-all cursor-pointer duration-300 group border-gray-800/30 data-[state=selected]:bg-transparent hover:shadow-[inset_4px_0_0_rgba(0,212,255,1)]"
+                    >
+                      <TableCell>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleToggleStar(coin.id); }}
+                          className={`transition-colors focus:outline-none focus:ring-2 focus:ring-crypto-primary/50 rounded-full p-1.5 
+                          ${isFaved ? 'text-crypto-yellow text-glow-yellow' : 'text-gray-600 group-hover:text-crypto-primary/50'}`}
+                        >
+                          <Star size={22} fill={isFaved ? 'currentColor' : 'none'} />
+                        </button>
+                      </TableCell>
+                      <TableCell className="flex items-center space-x-4">
+                        <div className="w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center bg-gray-800 overflow-hidden shadow-[0_0_10px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_15px_rgba(0,212,255,0.6)] transition-shadow duration-300 relative z-0">
+                          {coin.image ? (
+                            <img src={coin.image} alt={coin.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-sm font-bold text-gray-300">{coin.symbol[0]}</span>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-bold text-lg text-white group-hover:text-crypto-primary transition-colors">{coin.name}</div>
+                          <div className="text-xs text-crypto-primary/70 font-bold uppercase tracking-wider">{coin.symbol}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right font-bold text-lg text-gray-100">
+                        ${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className={`flex items-center justify-end space-x-1.5 font-bold text-lg ${isUp ? 'text-crypto-green text-glow-green' : 'text-crypto-red text-glow-red'}`}>
+                          {isUp ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+                          <span>{Math.abs(coin.price_change_percentage_24h).toFixed(2)}%</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow className="border-b-0 hover:bg-transparent">
+                  <TableCell colSpan={4} className="h-24 text-center text-gray-500">
+                    Brak wyników
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MarketPage;
+
+--- END OF FILE: src\pages\MarketPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\pages\RegisterPage.jsx ---
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuthStore } from '../store/useStore';
+import { useRegisterMutation } from '../hooks/queries';
+import { Lock, Mail, UserPlus, ChevronLeft, Loader2, User } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+
+const RegisterPage = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { setUser } = useAuthStore();
+  const registerMutation = useRegisterMutation();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    registerMutation.mutate({ username, email, password }, {
+      onSuccess: (data) => {
+        localStorage.setItem('crypto_pulse_token', data.token);
+        setUser(data.user);
+        navigate('/');
+      },
+    });
+  };
+
+  const isLoading = registerMutation.isPending;
+  const error = registerMutation.error?.message;
+
+  return (
+    <div className="container relative min-h-[calc(100vh-160px)] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-1 lg:px-0">
+      <Link
+        to="/login"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors z-20"
+      >
+        <ChevronLeft className="mr-2 h-4 w-4" />
+        Powrót do logowania
+      </Link>
+
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] relative z-10 pt-10">
+        <Card className="border-white/10 bg-crypto-card/40 backdrop-blur-xl shadow-2xl overflow-hidden">
+          {/* Accent Line */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-crypto-purple to-crypto-primary opacity-50" />
+          
+          <CardHeader className="space-y-1 text-center pt-8">
+            <CardTitle className="text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+               <UserPlus className="h-6 w-6 text-crypto-primary" /> Dołącz do nas
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Stwórz darmowe konto i zacznij śledzić rynek
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent className="grid gap-4">
+            {error && (
+              <div className="p-3 text-xs font-medium bg-destructive/10 border border-destructive/20 text-destructive rounded-md text-center animate-in fade-in zoom-in duration-300">
+                {error}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-2">
+                <Label htmlFor="username" className="text-gray-300 ml-1">Nazwa użytkownika</Label>
+                <div className="relative">
+                   <User className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                   <Input
+                    id="username"
+                    placeholder="Twoja unikalna nazwa"
+                    type="text"
+                    disabled={isLoading}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="pl-10 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="email" className="text-gray-300 ml-1">Email</Label>
+                <div className="relative">
+                   <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                   <Input
+                    id="email"
+                    placeholder="email@przyklad.pl"
+                    type="email"
+                    disabled={isLoading}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="password" title="password" className="text-gray-300 ml-1">Hasło</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Minimum 8 znaków"
+                    disabled={isLoading}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50"
+                    required
+                  />
+                </div>
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full h-11 bg-crypto-primary text-black hover:bg-crypto-primary/80 font-bold transition-all shadow-[0_0_20px_rgba(0,212,255,0.2)] mt-2" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Załóż konto"
+                )}
+              </Button>
+            </form>
+          </CardContent>
+          
+          <CardFooter className="flex flex-col gap-4 pb-8 pt-2 text-center">
+            <p className="text-sm text-gray-400">
+              Masz już konto?{" "}
+              <Link to="/login" className="text-crypto-primary hover:underline font-medium">
+                Zaloguj się
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default RegisterPage;
+
+--- END OF FILE: src\pages\RegisterPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\pages\TrendingPage.jsx ---
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTrendingQuery, useGlobalStatsQuery } from '../hooks/queries';
+import { TrendingUp, TrendingDown, Globe, Activity, Flame } from 'lucide-react';
+import GlareHover from '../components/GlareHover';
+
+const TrendingPage = () => {
+  const { data: trending = [], isLoading: isTrendingLoading, error: trendingError } = useTrendingQuery();
+  const { data: globalStats, isLoading: isGlobalLoading } = useGlobalStatsQuery();
+  const navigate = useNavigate();
+
+  const isLoading = isTrendingLoading || isGlobalLoading;
+  const error = trendingError?.message;
+
+  const formatLargeDecimal = (num) => {
+    if (!num) return 'Brak';
+    if (num >= 1e12) return `$${(num / 1e12).toFixed(2)} Bln`;
+    if (num >= 1e9) return `$${(num / 1e9).toFixed(2)} Mld`;
+    if (num >= 1e6) return `$${(num / 1e6).toFixed(2)} Mln`;
+    return `$${num.toLocaleString()}`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="w-12 h-12 border-4 border-crypto-primary/30 border-t-crypto-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-3xl font-bold text-red-500 mb-4">Błąd</h2>
+        <p className="text-gray-400 mb-8">{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-12 animate-fade-in antialiased mt-4 max-w-6xl mx-auto">
+
+      {/* Globalne Statystyki */}
+      <div className="mb-12">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-8 tracking-tight flex items-center gap-3">
+          Puls <span className="text-crypto-primary text-glow-primary">Świata</span> <Globe className="text-crypto-primary" size={40} />
+        </h1>
+        {globalStats ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <GlareHover
+              className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-primary hover:-translate-y-1 transition-transform h-auto"
+              glareColor="#00d4ff"
+              glareOpacity={0.15}
+            >
+              <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-2">Całkowita Kapitalizacja</p>
+              <p className="text-3xl font-black text-white">{formatLargeDecimal(globalStats.total_market_cap?.usd)}</p>
+              <p className="text-sm text-crypto-primary mt-2 flex items-center"><Activity size={14} className="mr-1" /> Zmiana 24h: {globalStats.market_cap_change_percentage_24h_usd?.toFixed(2)}%</p>
+            </GlareHover>
+            <GlareHover
+              className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-yellow hover:-translate-y-1 transition-transform h-auto"
+              glareColor="#ffb300"
+              glareOpacity={0.15}
+            >
+              <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-2">Dominacja Rynkowa</p>
+              <p className="text-3xl font-black text-white">{globalStats.market_cap_percentage?.btc?.toFixed(1)}% <span className="text-lg text-gray-400 font-medium">BTC</span></p>
+              <p className="text-sm text-crypto-yellow mt-2 flex items-center"><Activity size={14} className="mr-1" /> ETH: {globalStats.market_cap_percentage?.eth?.toFixed(1)}%</p>
+            </GlareHover>
+            <GlareHover
+              className="card p-6 bg-gradient-to-br from-gray-900/80 to-crypto-card border-l-4 border-crypto-green hover:-translate-y-1 transition-transform h-auto"
+              glareColor="#10b981"
+              glareOpacity={0.15}
+            >
+              <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-2">Aktywne Kryptowaluty</p>
+              <p className="text-3xl font-black text-white">{globalStats.active_cryptocurrencies?.toLocaleString()}</p>
+              <p className="text-sm text-crypto-green mt-2 flex items-center"><Activity size={14} className="mr-1" /> Śledzonych przez CoinGecko</p>
+            </GlareHover>
+          </div>
+        ) : (
+          <p className="text-gray-500">Brak danych globalnych.</p>
+        )}
+      </div>
+
+      {/* Gorąca  (Trending) */}
+      <div>
+        <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-2">
+          <Flame className="text-crypto-red text-glow-red" size={32} /> Na Fali (Trending)
+        </h2>
+        <p className="text-gray-400 mb-8 max-w-2xl">
+          Najczęściej wyszukiwane monety na świecie w przeciągu ostatnich 24 godzin. Uważaj, hype często wiąże się z wysoką zmiennością!
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {trending.length > 0 ? (
+            trending.map((coin) => {
+              const isUp = coin.data?.price_change_percentage_24h?.usd >= 0;
+
+              return (
+                <GlareHover
+                  key={coin.id}
+                  className="card p-5 cursor-pointer hover:scale-[1.03] hover:box-glow-primary transition-all group border border-gray-800/80 relative overflow-hidden h-auto"
+                  glareColor="#00d4ff"
+                  glareOpacity={0.2}
+                  style={{ display: 'block' }}
+                  onClick={() => navigate(`/coin/${coin.id}`)}
+                >
+                  <div className="absolute -right-6 -top-6 text-9xl text-gray-900/50 font-black z-0 pointer-events-none group-hover:text-crypto-primary/5 transition-colors">
+                    #{coin.market_cap_rank || '?'}
+                  </div>
+
+                  <div className="flex items-center gap-4 relative z-10 mb-4">
+                    <img src={coin.thumb} alt={coin.name} className="w-12 h-12 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_15px_rgba(0,212,255,0.4)]" />
+                    <div>
+                      <h3 className="text-lg font-bold text-white group-hover:text-crypto-primary transition-colors leading-tight">{coin.name}</h3>
+                      <p className="text-xs text-crypto-primary/70 font-bold uppercase">{coin.symbol}</p>
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 bg-gray-900/50 rounded-lg p-3 border border-gray-800/50 mt-4">
+                    <p className="text-xs text-gray-500 font-bold uppercase mb-1">Cena</p>
+                    <p className="text-xl font-bold text-white">
+                      ${parseFloat(coin.data?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumSignificantDigits: 4 })}
+                    </p>
+                    {coin.data?.price_change_percentage_24h?.usd !== undefined && (
+                      <p className={`text-sm font-bold flex items-center mt-1 ${isUp ? 'text-crypto-green text-glow-green' : 'text-crypto-red text-glow-red'}`}>
+                        {isUp ? <TrendingUp size={14} className="mr-1" /> : <TrendingDown size={14} className="mr-1" />}
+                        {isUp ? '+' : ''}{coin.data.price_change_percentage_24h.usd.toFixed(2)}%
+                      </p>
+                    )}
+                  </div>
+                </GlareHover>
+              );
+            })
+          ) : (
+            <p className="text-gray-500 col-span-full">Brak aktualnych trendów.</p>
+          )}
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
+export default TrendingPage;
+
+--- END OF FILE: src\pages\TrendingPage.jsx ---
+
+========================================
+
+--- START OF FILE: src\store\useStore.js ---
+import { create } from 'zustand';
+
+/**
+ * useAuthStore — slim Zustand store TYLKO dla auth state.
+ * Wszystkie dane z API (market, exchanges, trending, watchlist)
+ * zarządzane są przez TanStack Query w src/hooks/queries.js.
+ */
+export const useAuthStore = create((set) => ({
+  user: JSON.parse(localStorage.getItem('crypto_pulse_user')) || null,
+
+  setUser: (user) => {
+    localStorage.setItem('crypto_pulse_user', JSON.stringify(user));
+    set({ user });
+  },
+
+  logout: () => {
+    localStorage.removeItem('crypto_pulse_token');
+    localStorage.removeItem('crypto_pulse_user');
+    set({ user: null });
+  },
+}));
+
+--- END OF FILE: src\store\useStore.js ---
+
+========================================
+

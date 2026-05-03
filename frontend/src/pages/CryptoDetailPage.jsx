@@ -1,57 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useStore';
+import { useMarketQuery, useWatchlistQuery, useToggleWatchlistMutation, useCoinChartQuery } from '../hooks/queries';
 import { ArrowLeft, Star, TrendingUp, TrendingDown, Activity, DollarSign, Layers, PieChart, Info, BarChart2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
-import { apiService } from '../api/apiService';
 
 const CryptoDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { marketData, fetchMarketData, isLoading, watchlist, toggleWatchlist, user } = useStore();
-  const [coin, setCoin] = useState(null);
-
-  useEffect(() => {
-    fetchMarketData();
-  }, [fetchMarketData]);
-
-  useEffect(() => {
-    if (marketData.length > 0) {
-      const foundCoin = marketData.find(c => c.id === id);
-      setCoin(foundCoin || null);
-    }
-  }, [marketData, id]);
-
-  const [chartData, setChartData] = useState([]);
-  const [isChartLoading, setIsChartLoading] = useState(true);
+  const { user } = useAuthStore();
+  const { data: marketData = [], isLoading: isMarketLoading } = useMarketQuery();
+  const { data: watchlist = [] } = useWatchlistQuery(user);
+  const toggleMutation = useToggleWatchlistMutation();
   const [timeframe, setTimeframe] = useState(7);
 
-  useEffect(() => {
-    const fetchChart = async () => {
-      setIsChartLoading(true);
-      try {
-        const res = await apiService.getMarketChart(id, timeframe); // dynamiczne dni
-        
-        let xFormat = 'dd MMM';
-        if (timeframe === 1) xFormat = 'HH:mm';
-        if (timeframe === 365) xFormat = 'MMM yyyy';
+  // Coin lookup from cached market data
+  const coin = marketData.find(c => c.id === id) || null;
+  const isLoading = isMarketLoading;
 
-        const formattedData = res.data.prices.map(item => ({
-             time: item[0], // timestamp z coingecko
-             dateLabelX: format(new Date(item[0]), xFormat), // dynamiczny format Osi X
-             dateLabelTooltip: format(new Date(item[0]), 'dd MMM HH:mm'), // szczegółowe dla myszki
-             price: item[1]
-        }));
-        setChartData(formattedData);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsChartLoading(false);
-      }
-    };
-    if (id) fetchChart();
-  }, [id, timeframe]);
+  // Chart data via TanStack Query — automatyczny cache per (id, days)
+  const { data: rawChart, isLoading: isChartLoading } = useCoinChartQuery(id, timeframe);
+
+  const chartData = React.useMemo(() => {
+    if (!rawChart?.prices) return [];
+    let xFormat = 'dd MMM';
+    if (timeframe === 1) xFormat = 'HH:mm';
+    if (timeframe === 365) xFormat = 'MMM yyyy';
+    return rawChart.prices.map(item => ({
+      time: item[0],
+      dateLabelX: format(new Date(item[0]), xFormat),
+      dateLabelTooltip: format(new Date(item[0]), 'dd MMM HH:mm'),
+      price: item[1],
+    }));
+  }, [rawChart, timeframe]);
 
   if (isLoading || (marketData.length === 0 && !coin)) {
     return (
@@ -66,7 +49,9 @@ const CryptoDetailPage = () => {
       <div className="text-center py-20">
         <h2 className="text-3xl font-bold text-white mb-4">Nie znaleziono waluty</h2>
         <p className="text-gray-400 mb-8">Waluta o ID &quot;{id}&quot; nie istnieje w bazie CoinGecko lub nie została pobrana.</p>
-        <Link to="/" className="btn-primary">Wróć na Rynek</Link>
+        <Button asChild className="bg-crypto-primary hover:bg-crypto-primary/80 text-black font-bold">
+          <Link to="/">Wróć na Rynek</Link>
+        </Button>
       </div>
     );
   }
@@ -101,11 +86,8 @@ const CryptoDetailPage = () => {
   };
 
   const handleStarClick = () => {
-    if (!user) {
-        navigate('/login');
-        return;
-    }
-    toggleWatchlist(coin.id);
+    if (!user) { navigate('/login'); return; }
+    toggleMutation.mutate({ cryptoId: coin.id, isFaved: watchlist.includes(coin.id) });
   };
 
   return (
@@ -113,17 +95,20 @@ const CryptoDetailPage = () => {
       
       {/* Nagłówek i Powrót */}
       <div className="flex items-center justify-between">
-        <Link to="/" className="flex items-center text-crypto-primary hover:text-crypto-primary/70 transition-colors">
-          <ArrowLeft size={20} className="mr-2" />
-          Wróć na Rynek
-        </Link>
-        <button 
+        <Button asChild variant="ghost" className="text-crypto-primary hover:text-crypto-primary/70 hover:bg-crypto-primary/10 transition-colors pl-2">
+          <Link to="/">
+            <ArrowLeft size={20} className="mr-2" />
+            Wróć na Rynek
+          </Link>
+        </Button>
+        <Button 
            onClick={handleStarClick}
-           className="flex items-center gap-2 bg-crypto-card/60 backdrop-blur-md px-4 py-2 hover:bg-crypto-card transition-colors rounded-full border border-gray-800"
+           variant="outline"
+           className="flex items-center gap-2 bg-crypto-card/60 backdrop-blur-md px-4 py-2 hover:bg-crypto-card/80 transition-colors rounded-full border-gray-800"
         >
           <Star size={20} className={`${isFaved ? 'text-crypto-yellow text-glow-yellow fill-crypto-yellow' : 'text-gray-400'}`} />
           <span className="text-gray-300 font-medium">{isFaved ? 'W Ulubionych' : 'Dodaj do Obserwowanych'}</span>
-        </button>
+        </Button>
       </div>
 
       {/* Hero Karty */}
@@ -172,13 +157,14 @@ const CryptoDetailPage = () => {
               { label: '30D', value: 30 },
               { label: '1Y', value: 365 },
             ].map(tf => (
-               <button
+               <Button
                   key={tf.value}
+                  variant="ghost"
                   onClick={() => setTimeframe(tf.value)}
-                  className={`px-4 py-1.5 text-sm font-bold rounded-md transition-all ${timeframe === tf.value ? 'bg-crypto-primary text-gray-900 shadow-[0_0_10px_rgba(0,212,255,0.4)]' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+                  className={`px-4 py-1.5 h-auto text-sm font-bold rounded-md transition-all ${timeframe === tf.value ? 'bg-crypto-primary text-gray-900 shadow-[0_0_10px_rgba(0,212,255,0.4)] hover:bg-crypto-primary hover:text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
                >
                   {tf.label}
-               </button>
+               </Button>
             ))}
          </div>
       </div>

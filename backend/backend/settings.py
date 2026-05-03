@@ -133,7 +133,6 @@ INSTALLED_APPS = [
 
     # pobrane biblioteki
     'rest_framework',
-    'rest_framework.authtoken',
     'corsheaders',
     'drf_spectacular',
 

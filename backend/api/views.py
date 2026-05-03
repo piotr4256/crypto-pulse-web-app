@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from django.contrib.auth.models import User
-from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .services import CoinGeckoService
 from .models import UserWatchlist
@@ -17,8 +17,12 @@ from .serializers import (
     GlobalStatsSerializer,
     UserWatchlistSerializer,
     RegisterSerializer,
-    UserSerializer
+    UserSerializer,
+    CustomTokenObtainPairSerializer
 )
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 class RegisterAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -44,6 +48,7 @@ class UserWatchlistViewSet(viewsets.ModelViewSet):
     """
     serializer_class = UserWatchlistSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = 'coin_id'
 
     def get_queryset(self):
         return UserWatchlist.objects.filter(user=self.request.user).order_by('-added_at')
@@ -84,7 +89,8 @@ class CoinMarketChartView(APIView):
     """
     @extend_schema(responses={200: dict})
     def get(self, request, coin_id):
-        data = CoinGeckoService.get_coin_market_chart(coin_id, days=7)
+        days = request.query_params.get('days', 7)
+        data = CoinGeckoService.get_coin_market_chart(coin_id, days=days)
         if isinstance(data, dict) and 'error' in data:
             return Response(data, status=data.get('status', 500))
             

@@ -6,7 +6,7 @@ import ScrollToTopButton from './ScrollToTopButton';
 
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col pt-16 relative bg-transparent">
+    <div className="min-h-screen flex flex-col pt-[120px] relative bg-transparent">
       <AnimatedBackground />
       <div className="relative z-10 flex-1 flex flex-col bg-transparent">
           <Navbar />

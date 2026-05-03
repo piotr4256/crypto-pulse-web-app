@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../store/useStore';
 
 const isProd = import.meta.env.PROD;
 const LOCAL_DJANGO_URL = 'http://127.0.0.1:8000/api';
@@ -10,11 +11,11 @@ const apiClient = axios.create({
   baseURL: BASE_URL,
 });
 
-// Interceptor do automatycznego wstrzykiwania tokenu do autoryzowanych ścieżek
+// Interceptor — token czytany z RAM (Zustand), nie z dysku (localStorage)
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('crypto_pulse_token');
+  const token = useAuthStore.getState().token;
   if (token) {
-    config.headers.Authorization = `Token ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
@@ -22,9 +23,8 @@ apiClient.interceptors.request.use((config) => {
 export const apiService = {
   login: async (username, password) => {
     try {
-      // Endpoint DRF ObtainAuthToken odbiera domyślnie 'username' i 'password'
-      const response = await apiClient.post('/login/', { username, password });
-      return { data: response.data };
+      const response = await apiClient.post('/token/', { username, password });
+      return { data: { user: response.data.user, token: response.data.access } };
     } catch (error) {
       throw new Error(error.response?.data?.non_field_errors?.[0] || 'Niepoprawne dane logowania');
     }
@@ -33,7 +33,7 @@ export const apiService = {
   register: async (username, email, password) => {
     try {
       const response = await apiClient.post('/register/', { username, email, password });
-      return { data: response.data };
+      return { data: { user: response.data.user, token: response.data.access } };
     } catch (error) {
        // Odbieranie ewentualnych błędów z Django (np. nazwa zajęta)
       const errs = error.response?.data;
@@ -64,7 +64,7 @@ export const apiService = {
 
   getMarketChart: async (id, days = 7) => {
     try {
-      const response = await apiClient.get(`/coins/${id}/chart/`);
+      const response = await apiClient.get(`/coins/${id}/chart/?days=${days}`);
       return { data: response.data };
     } catch (error) {
       console.error(`Błąd pobierania wykresu dla ${id}:`, error);
@@ -126,15 +126,7 @@ export const apiService = {
 
   removeFromWatchlist: async (cryptoId) => {
     try {
-      // DRF udostępnia usuwanie na postawie ID. Ponieważ mamy ID elementu listy, a znamy 'coin_id', musimy podać coin_id.
-      // Czekaj - standardowy ModelViewSet usuwa po 'id' zasobu (PK), nie po 'coin_id'!
-      // Ale nie mamy PK w state? Wtedy usunąć to po ID jest niemożliwie! Trzeba zrobić lookup. 
-      // Zaraz to naprawię dopisując customowy DELETE viewset w backendzie lub pobierając z pamięci PK by usunąć!
-      let items = await apiClient.get('/watchlist/');
-      let target = items.data.find(x => x.coin_id === cryptoId);
-      if (target) {
-        await apiClient.delete(`/watchlist/${target.id}/`);
-      }
+      await apiClient.delete(`/watchlist/${cryptoId}/`);
       return { data: { success: true } };
     } catch (error) {
       console.error('Błąd usuwania z ulubionych:', error);

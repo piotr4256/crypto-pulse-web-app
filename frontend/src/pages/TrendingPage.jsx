@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import { useStore } from '../store/useStore';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTrendingQuery, useGlobalStatsQuery } from '../hooks/queries';
 import { TrendingUp, TrendingDown, Globe, Activity, Flame } from 'lucide-react';
 import GlareHover from '../components/GlareHover';
 
 const TrendingPage = () => {
-  const { trending, globalStats, fetchTrendingAndGlobal, isLoading, error } = useStore();
+  const { data: trending = [], isLoading: isTrendingLoading, error: trendingError } = useTrendingQuery();
+  const { data: globalStats, isLoading: isGlobalLoading } = useGlobalStatsQuery();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchTrendingAndGlobal();
-  }, [fetchTrendingAndGlobal]);
+  const isLoading = isTrendingLoading || isGlobalLoading;
+  const error = trendingError?.message;
 
   const formatLargeDecimal = (num) => {
     if (!num) return 'Brak';

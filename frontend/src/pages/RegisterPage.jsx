@@ -1,106 +1,136 @@
 import React, { useState } from 'react';
-import { useStore } from '../store/useStore';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Mail, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { useAuthStore } from '../store/useStore';
+import { useRegisterMutation } from '../hooks/queries';
+import { Lock, Mail, UserPlus, ChevronLeft, Loader2, User } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const { register, isLoading, error } = useStore();
+  const { setUser } = useAuthStore();
+  const registerMutation = useRegisterMutation();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await register(username, email, password);
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-    }
+    registerMutation.mutate({ username, email, password }, {
+      onSuccess: (data) => {
+        setUser(data.user, data.token);
+        navigate('/');
+      },
+    });
   };
 
+  const isLoading = registerMutation.isPending;
+  const error = registerMutation.error?.message;
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)]">
-      <div className="card w-full max-w-md p-8 relative overflow-hidden">
-        {/* Neon Glow Effect */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-crypto-primary via-blue-400 to-crypto-green opacity-75"></div>
+    <div className="container relative min-h-[calc(100vh-160px)] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-1 lg:px-0">
+      <Link
+        to="/login"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors z-20"
+      >
+        <ChevronLeft className="mr-2 h-4 w-4" />
+        Powrót do logowania
+      </Link>
 
-        <div className="text-center mb-8">
-          <div className="mx-auto w-12 h-12 bg-crypto-primary/20 text-crypto-primary rounded-full flex items-center justify-center mb-4">
-            <UserPlus size={24} />
-          </div>
-          <h1 className="text-3xl font-bold mb-2">Załóż konto</h1>
-          <p className="text-gray-400">Rozpocznij śledzenie swoich ulubionych kryptowalut</p>
-        </div>
+      <div className="mx-auto flex w-full flex-col justify-center space-y-4 sm:w-[400px] relative z-10 pt-4">
+        <Card className="border-white/10 bg-crypto-card/40 backdrop-blur-xl shadow-2xl overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-crypto-purple to-crypto-primary opacity-50" />
 
-        {error && (
-          <div className="mb-4 p-3 bg-crypto-red/10 border border-crypto-red/20 text-crypto-red rounded-lg text-sm text-center font-medium">
-            {error}
-          </div>
-        )}
+          <CardHeader className="space-y-1 text-center pt-6 pb-4">
+            <CardTitle className="text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+              <UserPlus className="h-5 w-5 text-crypto-primary" /> Dołącz do nas
+            </CardTitle>
+            <CardDescription className="text-gray-400 text-xs">
+              Stwórz darmowe konto i zacznij śledzić rynek
+            </CardDescription>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="relative">
-            <UserPlus className="absolute left-3 top-3 text-gray-400" size={20} />
-            <input 
-              type="text" 
-              placeholder="Nazwa użytkownika" 
-              className="input-field pl-11"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="relative">
-            <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
-            <input 
-              type="email" 
-              placeholder="Adres e-mail" 
-              className="input-field pl-11"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
-            <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Hasło" 
-              className="input-field pl-11 pr-11"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-400 hover:text-crypto-primary transition-colors focus:outline-none"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className="btn-primary w-full py-3 flex justify-center items-center h-12"
-          >
-            {isLoading ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              'Zarejestruj się'
+          <CardContent className="grid gap-4">
+            {error && (
+              <div className="p-3 text-xs font-medium bg-destructive/10 border border-destructive/20 text-destructive rounded-md text-center animate-in fade-in zoom-in duration-300">
+                {error}
+              </div>
             )}
-          </button>
-        </form>
 
-        <p className="mt-6 text-center text-sm text-gray-400">
-          Masz już konto? <Link to="/login" className="text-crypto-primary hover:underline">Zaloguj się</Link>
-        </p>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div className="grid gap-1.5">
+                <Label htmlFor="reg-username" className="text-gray-300 ml-1 text-xs">Nazwa użytkownika</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-2.5 h-3.5 w-3.5 text-gray-500" />
+                  <Input
+                    id="reg-username"
+                    placeholder="Twoja unikalna nazwa"
+                    type="text"
+                    disabled={isLoading}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="pl-9 h-9 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50 text-sm"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-1.5">
+                <Label htmlFor="reg-email" className="text-gray-300 ml-1 text-xs">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-2.5 h-3.5 w-3.5 text-gray-500" />
+                  <Input
+                    id="reg-email"
+                    placeholder="email@przyklad.pl"
+                    type="email"
+                    disabled={isLoading}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-9 h-9 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50 text-sm"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-1.5">
+                <Label htmlFor="reg-password" className="text-gray-300 ml-1 text-xs">Hasło</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-2.5 h-3.5 w-3.5 text-gray-500" />
+                  <Input
+                    id="reg-password"
+                    type="password"
+                    placeholder="Minimum 8 znaków"
+                    disabled={isLoading}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-9 h-9 bg-black/40 border-white/10 focus-visible:ring-crypto-primary/50 text-sm"
+                    required
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full h-10 bg-crypto-primary text-black hover:bg-crypto-primary/80 font-bold transition-all shadow-[0_0_20px_rgba(0,212,255,0.2)] mt-1 text-sm"
+                disabled={isLoading}
+              >
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Załóż konto"}
+              </Button>
+            </form>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-4 pb-6 pt-4 text-center bg-transparent border-t-0">
+            <div className="w-full border-t border-white/10 mb-2" />
+            <p className="text-sm text-gray-500">
+              Masz już konto?{" "}
+              <Link to="/login" className="text-crypto-primary hover:text-crypto-primary/80 hover:underline font-bold transition-colors">
+                Zaloguj się
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
