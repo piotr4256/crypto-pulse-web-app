@@ -10,7 +10,7 @@ const PortfolioSection = () => {
   const [activeTab, setActiveTab] = useState('Popularne');
   const [cryptos, setCryptos] = useState([]);
   
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const containerRef = useRef(null);
   const tabsRef = useRef({});
 
@@ -32,6 +32,7 @@ const PortfolioSection = () => {
     }
   }, [marketData, activeTab]);
 
+  // Indicator Logic
   useEffect(() => {
     const activeTabEl = tabsRef.current[activeTab];
     if (activeTabEl && containerRef.current) {
@@ -39,8 +40,11 @@ const PortfolioSection = () => {
       const tabRect = activeTabEl.getBoundingClientRect();
       setIndicatorStyle({
         left: tabRect.left - containerRect.left,
-        width: tabRect.width
+        width: tabRect.width,
+        opacity: 1
       });
+    } else {
+      setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
     }
   }, [activeTab]);
 
@@ -50,14 +54,13 @@ const PortfolioSection = () => {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="w-full flex justify-center mb-8">
-          <TabsList ref={containerRef} className="nav-pill-container !bg-crypto-card/30 !p-1 border-white/5 h-auto p-0 rounded-full flex relative">
+          <TabsList ref={containerRef} className="nav-pill-container h-auto p-1.5 flex relative">
             <div 
-              className="nav-indicator !bg-crypto-primary/10 !border-crypto-primary/20 absolute transition-all duration-300 ease-out" 
+              className="nav-indicator" 
               style={{ 
                 left: indicatorStyle.left, 
                 width: indicatorStyle.width,
-                height: 'calc(100% - 8px)',
-                top: '4px'
+                opacity: indicatorStyle.opacity
               }} 
             />
             {TABS.map(tab => (
@@ -65,7 +68,7 @@ const PortfolioSection = () => {
                 key={tab}
                 value={tab}
                 ref={el => tabsRef.current[tab] = el}
-                className="relative z-10 px-6 py-2 rounded-full font-medium outline-none text-sm bg-transparent border-transparent data-[state=active]:bg-transparent data-active:bg-transparent data-[state=active]:shadow-none data-active:shadow-none text-gray-400 hover:text-white data-[state=active]:text-crypto-primary data-active:text-crypto-primary transition-colors"
+                className="nav-link-item !bg-transparent !shadow-none text-gray-400 hover:text-white data-[state=active]:text-crypto-primary transition-colors cursor-pointer"
               >
                 {tab}
               </TabsTrigger>
