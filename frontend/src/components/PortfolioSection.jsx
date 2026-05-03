@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useMarketQuery } from '../hooks/queries';
 import { Link } from 'react-router-dom';
 import GlareHover from './GlareHover';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const TABS = ['Popularne', 'Nagrody', 'Stablecoiny', 'Ostatnio notowane'];
 
@@ -10,7 +9,7 @@ const PortfolioSection = () => {
   const [activeTab, setActiveTab] = useState('Popularne');
   const [cryptos, setCryptos] = useState([]);
   
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const containerRef = useRef(null);
   const tabsRef = useRef({});
 
@@ -32,7 +31,6 @@ const PortfolioSection = () => {
     }
   }, [marketData, activeTab]);
 
-  // Indicator Logic
   useEffect(() => {
     const activeTabEl = tabsRef.current[activeTab];
     if (activeTabEl && containerRef.current) {
@@ -40,11 +38,8 @@ const PortfolioSection = () => {
       const tabRect = activeTabEl.getBoundingClientRect();
       setIndicatorStyle({
         left: tabRect.left - containerRect.left,
-        width: tabRect.width,
-        opacity: 1
+        width: tabRect.width
       });
-    } else {
-      setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
     }
   }, [activeTab]);
 
@@ -52,30 +47,28 @@ const PortfolioSection = () => {
     <div className="w-full max-w-6xl mx-auto my-12 antialiased">
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="w-full flex justify-center mb-8">
-          <TabsList ref={containerRef} className="nav-pill-container h-auto p-1.5 flex relative">
-            <div 
-              className="nav-indicator" 
-              style={{ 
-                left: indicatorStyle.left, 
-                width: indicatorStyle.width,
-                opacity: indicatorStyle.opacity
-              }} 
-            />
-            {TABS.map(tab => (
-              <TabsTrigger
-                key={tab}
-                value={tab}
-                ref={el => tabsRef.current[tab] = el}
-                className="nav-link-item !bg-transparent !shadow-none text-gray-400 hover:text-white data-[state=active]:text-crypto-primary transition-colors cursor-pointer"
-              >
-                {tab}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+      <div className="w-full flex justify-center mb-8">
+        <div ref={containerRef} className="nav-pill-container">
+          <div 
+            className="nav-indicator" 
+            style={{ 
+              left: indicatorStyle.left, 
+              width: indicatorStyle.width,
+              opacity: 1
+            }} 
+          />
+          {TABS.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              ref={el => tabsRef.current[tab] = el}
+              className={`nav-link-item ${activeTab === tab ? 'text-crypto-primary' : 'text-gray-400 hover:text-white'}`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
-      </Tabs>
+      </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
