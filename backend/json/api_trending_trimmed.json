@@ -1,0 +1,274 @@
+{
+  "coins": [
+    {
+      "id": "ravedao",
+      "coin_id": 70544,
+      "name": "RaveDAO",
+      "symbol": "RAVE",
+      "market_cap_rank": 34,
+      "thumb": "https://coin-images.coingecko.com/coins/images/70544/standard/coin.jpeg?1762452940",
+      "price_btc": 0.00016056741357613587,
+      "score": 0,
+      "data": {
+        "price": 11.868055909456146,
+        "price_btc": "0.0001605674135761358",
+        "price_change_percentage_24h_usd": -26.313589768657163,
+        "market_cap": "$2,936,630,740",
+        "total_volume": "$320,633,863",
+        "sparkline": "https://www.coingecko.com/coins/70544/sparkline.svg"
+      }
+    },
+    {
+      "id": "enjincoin",
+      "coin_id": 1102,
+      "name": "Enjin Coin",
+      "symbol": "ENJ",
+      "market_cap_rank": 216,
+      "thumb": "https://coin-images.coingecko.com/coins/images/1102/standard/Symbol_Only_-_Purple.png?1709725966",
+      "price_btc": 9.947826168581111e-07,
+      "score": 1,
+      "data": {
+        "price": 0.07352759474467754,
+        "price_btc": "0.0000009947826168581111",
+        "price_change_percentage_24h_usd": 55.94562912247218,
+        "market_cap": "$140,880,143",
+        "total_volume": "$558,595,175",
+        "sparkline": "https://www.coingecko.com/coins/1102/sparkline.svg"
+      }
+    },
+    {
+      "id": "world-liberty-financial",
+      "coin_id": 50767,
+      "name": "World Liberty Financial",
+      "symbol": "WLFI",
+      "market_cap_rank": 38,
+      "thumb": "https://coin-images.coingecko.com/coins/images/50767/standard/wlfi.png?1756438915",
+      "price_btc": 1.089996326238621e-06,
+      "score": 2,
+      "data": {
+        "price": 0.0805651473906806,
+        "price_btc": "0.000001089996326238621",
+        "price_change_percentage_24h_usd": -2.8772360310863268,
+        "market_cap": "$2,560,512,720",
+        "total_volume": "$106,427,042",
+        "sparkline": "https://www.coingecko.com/coins/50767/sparkline.svg"
+      }
+    },
+    {
+      "id": "bio-protocol",
+      "coin_id": 53022,
+      "name": "Bio Protocol",
+      "symbol": "BIO",
+      "market_cap_rank": 482,
+      "thumb": "https://coin-images.coingecko.com/coins/images/53022/standard/bio.jpg?1735011002",
+      "price_btc": 3.4470866231136003e-07,
+      "score": 3,
+      "data": {
+        "price": 0.025478530080732906,
+        "price_btc": "0.00000034470866231136",
+        "price_change_percentage_24h_usd": 31.912933631991457,
+        "market_cap": "$45,514,988",
+        "total_volume": "$222,775,056",
+        "sparkline": "https://www.coingecko.com/coins/53022/sparkline.svg"
+      }
+    },
+    {
+      "id": "solana",
+      "coin_id": 4128,
+      "name": "Solana",
+      "symbol": "SOL",
+      "market_cap_rank": 7,
+      "thumb": "https://coin-images.coingecko.com/coins/images/4128/standard/solana.png?1718769756",
+      "price_btc": 0.0011289722185506485,
+      "score": 4,
+      "data": {
+        "price": 83.44598142031232,
+        "price_btc": "0.001128972218550648",
+        "price_change_percentage_24h_usd": -4.4585284366716476,
+        "market_cap": "$47,971,329,912",
+        "total_volume": "$4,260,033,073",
+        "sparkline": "https://www.coingecko.com/coins/4128/sparkline.svg"
+      }
+    },
+    {
+      "id": "monad",
+      "coin_id": 38927,
+      "name": "Monad",
+      "symbol": "MON",
+      "market_cap_rank": 116,
+      "thumb": "https://coin-images.coingecko.com/coins/images/38927/standard/mon.png?1766029057",
+      "price_btc": 4.5684265215782976e-07,
+      "score": 5,
+      "data": {
+        "price": 0.03376671528100869,
+        "price_btc": "0.0000004568426521578297",
+        "price_change_percentage_24h_usd": -8.240462626747727,
+        "market_cap": "$399,982,814",
+        "total_volume": "$93,312,509",
+        "sparkline": "https://www.coingecko.com/coins/38927/sparkline.svg"
+      }
+    },
+    {
+      "id": "hyperliquid",
+      "coin_id": 50882,
+      "name": "Hyperliquid",
+      "symbol": "HYPE",
+      "market_cap_rank": 13,
+      "thumb": "https://coin-images.coingecko.com/coins/images/50882/standard/hyperliquid.jpg?1729431300",
+      "price_btc": 0.0005972427624017638,
+      "score": 6,
+      "data": {
+        "price": 44.14414069353626,
+        "price_btc": "0.0005972427624017638",
+        "price_change_percentage_24h_usd": -1.0965389498616187,
+        "market_cap": "$10,513,514,756",
+        "total_volume": "$358,503,333",
+        "sparkline": "https://www.coingecko.com/coins/50882/sparkline.svg"
+      }
+    },
+    {
+      "id": "bitcoin",
+      "coin_id": 1,
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "market_cap_rank": 1,
+      "thumb": "https://coin-images.coingecko.com/coins/images/1/standard/bitcoin.png?1696501400",
+      "price_btc": 1.0,
+      "score": 7,
+      "data": {
+        "price": 73924.26608165099,
+        "price_btc": "1.0",
+        "price_change_percentage_24h_usd": -2.064344856803631,
+        "market_cap": "$1,479,199,318,698",
+        "total_volume": "$49,218,571,078",
+        "sparkline": "https://www.coingecko.com/coins/1/sparkline.svg"
+      }
+    },
+    {
+      "id": "bittensor",
+      "coin_id": 28452,
+      "name": "Bittensor",
+      "symbol": "TAO",
+      "market_cap_rank": 41,
+      "thumb": "https://coin-images.coingecko.com/coins/images/28452/standard/ARUsPeNQ_400x400.jpeg?1696527447",
+      "price_btc": 0.0033362954308852498,
+      "score": 8,
+      "data": {
+        "price": 246.5963661140646,
+        "price_btc": "0.003336295430885249",
+        "price_change_percentage_24h_usd": -2.3358701310400276,
+        "market_cap": "$2,368,139,006",
+        "total_volume": "$311,991,561",
+        "sparkline": "https://www.coingecko.com/coins/28452/sparkline.svg"
+      }
+    },
+    {
+      "id": "mezo",
+      "coin_id": 71716,
+      "name": "MEZO",
+      "symbol": "MEZO",
+      "market_cap_rank": 538,
+      "thumb": "https://coin-images.coingecko.com/coins/images/71716/standard/KnBgdkXh_400x400_%281%29.jpg?1769058618",
+      "price_btc": 1.0329324685574994e-06,
+      "score": 9,
+      "data": {
+        "price": 0.07634737344585914,
+        "price_btc": "0.000001032932468557499",
+        "price_change_percentage_24h_usd": -25.21771692804839,
+        "market_cap": "$38,173,687",
+        "total_volume": "$25,739,535",
+        "sparkline": "https://www.coingecko.com/coins/71716/sparkline.svg"
+      }
+    },
+    {
+      "id": "aria-ai",
+      "coin_id": 68392,
+      "name": "Aria.AI",
+      "symbol": "ARIA",
+      "market_cap_rank": 851,
+      "thumb": "https://coin-images.coingecko.com/coins/images/68392/standard/aria.png?1755601564",
+      "price_btc": 1.4122299012350948e-06,
+      "score": 10,
+      "data": {
+        "price": 0.10438247120992944,
+        "price_btc": "0.000001412229901235094",
+        "price_change_percentage_24h_usd": -89.15268960336192,
+        "market_cap": "$19,098,829",
+        "total_volume": "$187,120,912",
+        "sparkline": "https://www.coingecko.com/coins/68392/sparkline.svg"
+      }
+    },
+    {
+      "id": "ethereum",
+      "coin_id": 279,
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "market_cap_rank": 2,
+      "thumb": "https://coin-images.coingecko.com/coins/images/279/standard/ethereum.png?1696501628",
+      "price_btc": 0.031424599298258304,
+      "score": 11,
+      "data": {
+        "price": 2322.6935845681146,
+        "price_btc": "0.0314245992982583",
+        "price_change_percentage_24h_usd": -2.9024081946434417,
+        "market_cap": "$280,233,697,979",
+        "total_volume": "$18,994,916,556",
+        "sparkline": "https://www.coingecko.com/coins/279/sparkline.svg"
+      }
+    },
+    {
+      "id": "pi-network",
+      "coin_id": 54342,
+      "name": "Pi Network",
+      "symbol": "PI",
+      "market_cap_rank": 50,
+      "thumb": "https://coin-images.coingecko.com/coins/images/54342/standard/pi_network.jpg?1739347576",
+      "price_btc": 2.251036265489446e-06,
+      "score": 12,
+      "data": {
+        "price": 0.16638135757461472,
+        "price_btc": "0.000002251036265489446",
+        "price_change_percentage_24h_usd": 0.3930600091526357,
+        "market_cap": "$1,687,617,468",
+        "total_volume": "$14,107,951",
+        "sparkline": "https://www.coingecko.com/coins/54342/sparkline.svg"
+      }
+    },
+    {
+      "id": "fetch-ai",
+      "coin_id": 5681,
+      "name": "Artificial Superintelligence Alliance",
+      "symbol": "FET",
+      "market_cap_rank": 102,
+      "thumb": "https://coin-images.coingecko.com/coins/images/5681/standard/ASI.png?1719827289",
+      "price_btc": 3.0589833789323846e-06,
+      "score": 13,
+      "data": {
+        "price": 0.22609933708655242,
+        "price_btc": "0.000003058983378932384",
+        "price_change_percentage_24h_usd": -3.713281718058675,
+        "market_cap": "$510,711,195",
+        "total_volume": "$68,338,366",
+        "sparkline": "https://www.coingecko.com/coins/5681/sparkline.svg"
+      }
+    },
+    {
+      "id": "based-one",
+      "coin_id": 71361,
+      "name": "Based",
+      "symbol": "BASED",
+      "market_cap_rank": 861,
+      "thumb": "https://coin-images.coingecko.com/coins/images/71361/standard/based-logo-200x200.png?1774599745",
+      "price_btc": 1.0733944711804224e-06,
+      "score": 14,
+      "data": {
+        "price": 0.07933805068629254,
+        "price_btc": "0.000001073394471180422",
+        "price_change_percentage_24h_usd": 19.231794283418402,
+        "market_cap": "$18,666,589",
+        "total_volume": "$51,415,357",
+        "sparkline": "https://www.coingecko.com/coins/71361/sparkline.svg"
+      }
+    }
+  ]
+}
