@@ -33,13 +33,15 @@ const LoginPage = () => {
 
   return (
     <div className="container relative min-h-[calc(100vh-160px)] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-1 lg:px-0">
-      <Link
-        to="/"
-        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors z-20"
+      <Button
+        asChild
+        className="absolute left-4 top-4 md:left-8 md:top-8 rounded-full bg-crypto-primary/10 border border-crypto-primary/30 text-crypto-primary hover:bg-crypto-primary/20 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300 z-20 group h-auto py-2 px-4"
       >
-        <ChevronLeft className="mr-2 h-4 w-4" />
-        Powrót
-      </Link>
+        <Link to="/" className="flex flex-row items-center justify-center gap-2 whitespace-nowrap">
+          <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Powrót
+        </Link>
+      </Button>
 
       <div className="mx-auto flex w-full flex-col justify-center space-y-4 sm:w-[400px] relative z-10">
         <Card className="border-white/10 bg-crypto-card/40 backdrop-blur-xl shadow-2xl overflow-hidden">

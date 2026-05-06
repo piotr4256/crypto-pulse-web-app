@@ -31,13 +31,15 @@ const RegisterPage = () => {
 
   return (
     <div className="container relative min-h-[calc(100vh-160px)] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-1 lg:px-0">
-      <Link
-        to="/login"
-        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors z-20"
+      <Button
+        asChild
+        className="absolute left-4 top-4 md:left-8 md:top-8 rounded-full bg-crypto-primary/10 border border-crypto-primary/30 text-crypto-primary hover:bg-crypto-primary/20 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300 z-20 group h-auto py-2 px-4"
       >
-        <ChevronLeft className="mr-2 h-4 w-4" />
-        Powrót do logowania
-      </Link>
+        <Link to="/login" className="flex flex-row items-center justify-center gap-2 whitespace-nowrap">
+          <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Powrót do logowania
+        </Link>
+      </Button>
 
       <div className="mx-auto flex w-full flex-col justify-center space-y-4 sm:w-[400px] relative z-10 pt-4">
         <Card className="border-white/10 bg-crypto-card/40 backdrop-blur-xl shadow-2xl overflow-hidden">
@@ -121,14 +123,18 @@ const RegisterPage = () => {
             </form>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-4 pb-6 pt-4 text-center bg-transparent border-t-0">
-            <div className="w-full border-t border-white/10 mb-2" />
-            <p className="text-sm text-gray-500">
-              Masz już konto?{" "}
-              <Link to="/login" className="text-crypto-primary hover:text-crypto-primary/80 hover:underline font-bold transition-colors">
-                Zaloguj się
-              </Link>
-            </p>
+          <CardFooter className="flex flex-col gap-4 pb-6 pt-4 bg-transparent border-t-0">
+            <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
+                <span className="bg-crypto-card-solid/80 backdrop-blur-sm px-3 text-gray-500 rounded-full border border-white/5">Masz już konto?</span>
+              </div>
+            </div>
+            <Button variant="outline" asChild className="w-full border-crypto-primary/20 bg-crypto-primary/5 hover:bg-crypto-primary/10 text-crypto-primary hover:text-crypto-primary h-11 transition-all duration-300">
+              <Link to="/login">Zaloguj się</Link>
+            </Button>
           </CardFooter>
         </Card>
       </div>

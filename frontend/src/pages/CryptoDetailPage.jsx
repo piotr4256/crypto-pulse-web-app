@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useStore';
 import { useMarketQuery, useWatchlistQuery, useToggleWatchlistMutation, useCoinChartQuery } from '../hooks/queries';
-import { ArrowLeft, Star, TrendingUp, TrendingDown, Activity, DollarSign, Layers, PieChart, Info, BarChart2 } from 'lucide-react';
+import { ChevronLeft, Star, TrendingUp, TrendingDown, Activity, DollarSign, Layers, PieChart, Info, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
@@ -49,8 +49,14 @@ const CryptoDetailPage = () => {
       <div className="text-center py-20">
         <h2 className="text-3xl font-bold text-white mb-4">Nie znaleziono waluty</h2>
         <p className="text-gray-400 mb-8">Waluta o ID &quot;{id}&quot; nie istnieje w bazie CoinGecko lub nie została pobrana.</p>
-        <Button asChild className="bg-crypto-primary hover:bg-crypto-primary/80 text-black font-bold">
-          <Link to="/">Wróć na Rynek</Link>
+        <Button
+          asChild
+          className="rounded-full bg-crypto-primary/10 border border-crypto-primary/30 text-crypto-primary hover:bg-crypto-primary/20 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300 group h-auto py-2 px-4"
+        >
+          <Link to="/" className="flex flex-row items-center justify-center gap-2 whitespace-nowrap">
+            <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Wróć na rynek
+          </Link>
         </Button>
       </div>
     );
@@ -95,10 +101,13 @@ const CryptoDetailPage = () => {
       
       {/* Nagłówek i Powrót */}
       <div className="flex items-center justify-between">
-        <Button asChild variant="ghost" className="text-crypto-primary hover:text-crypto-primary/70 hover:bg-crypto-primary/10 transition-colors pl-2">
-          <Link to="/">
-            <ArrowLeft size={20} className="mr-2" />
-            Wróć na Rynek
+        <Button
+          asChild
+          className="rounded-full bg-crypto-primary/10 border border-crypto-primary/30 text-crypto-primary hover:bg-crypto-primary/20 hover:shadow-[0_0_15px_rgba(0,212,255,0.2)] transition-all duration-300 group h-auto py-2 px-4"
+        >
+          <Link to="/" className="flex flex-row items-center justify-center gap-2 whitespace-nowrap">
+            <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Wróć na rynek
           </Link>
         </Button>
         <Button 
