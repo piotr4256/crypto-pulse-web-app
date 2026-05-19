@@ -29,11 +29,13 @@ djangorestframework-simplejwt
 # - clsx
 # - date-fns
 # - lucide-react
+# - ogl
 # - react
 # - react-dom
 # - react-router-dom
 # - recharts
 # - tailwind-merge
+# - three
 # - tw-animate-css
 # - usehooks-ts
 # - zustand
