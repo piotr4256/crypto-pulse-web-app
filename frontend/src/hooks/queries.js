@@ -4,12 +4,12 @@ import { apiService } from '../api/apiService';
 // ─── Query Keys ───────────────────────────────────────────────────────────────
 // Centralizacja kluczy cache — ułatwia invalidation i refetch
 export const QUERY_KEYS = {
-  markets:    ['markets'],
-  exchanges:  ['exchanges'],
-  trending:   ['trending'],
+  markets: ['markets'],
+  exchanges: ['exchanges'],
+  trending: ['trending'],
   globalStats: ['globalStats'],
-  watchlist:  ['watchlist'],
-  coinChart:  (id, days) => ['coinChart', id, days],
+  watchlist: ['watchlist'],
+  coinChart: (id, days) => ['coinChart', id, days],
 };
 
 // ─── Market Data ──────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ export const useMarketQuery = () =>
       return res.data;
     },
     staleTime: 60_000,      // dane świeże przez 1 minutę
-    gcTime:    5 * 60_000,  // cache żyje 5 minut po ostatnim użyciu
+    gcTime: 5 * 60_000,  // cache żyje 5 minut po ostatnim użyciu
     refetchInterval: 30_000, // Automatyczne odświeżanie co 30 sekund
   });
 
@@ -34,7 +34,7 @@ export const useExchangesQuery = () =>
       return res.data;
     },
     staleTime: 5 * 60_000,
-    gcTime:    10 * 60_000,
+    gcTime: 10 * 60_000,
   });
 
 // ─── Trending ─────────────────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ export const useWatchlistQuery = (user) =>
       const res = await apiService.getUserWatchlist();
       return res.data; // string[] z coin_id
     },
-    enabled:   !!user,    // fetch tylko gdy user jest zalogowany
+    enabled: !!user,    // fetch tylko gdy user jest zalogowany
     staleTime: 2 * 60_000,
   });
 
@@ -112,7 +112,7 @@ export const useCoinChartQuery = (id, days) =>
       const res = await apiService.getMarketChart(id, days);
       return res.data;
     },
-    enabled:   !!id,
+    enabled: !!id,
     staleTime: 5 * 60_000,
   });
 

@@ -35,7 +35,7 @@ export const apiService = {
       const response = await apiClient.post('/register/', { username, email, password });
       return { data: { user: response.data.user, token: response.data.access } };
     } catch (error) {
-       // Odbieranie ewentualnych błędów z Django (np. nazwa zajęta)
+      // Odbieranie ewentualnych błędów z Django (np. nazwa zajęta)
       const errs = error.response?.data;
       const msg = errs ? Object.values(errs).flat()[0] : 'Błąd rejestracji';
       throw new Error(msg);
@@ -106,7 +106,7 @@ export const apiService = {
     try {
       const response = await apiClient.get('/watchlist/');
       // Mapujemy z tabeli BD na samą tablicę stringów z id monet, np. ['bitcoin', 'solana']
-      return { data: response.data.map(item => item.coin_id) }; 
+      return { data: response.data.map(item => item.coin_id) };
     } catch (error) {
       console.error('Błąd pobierania watchlisty:', error);
       return { data: [] };
