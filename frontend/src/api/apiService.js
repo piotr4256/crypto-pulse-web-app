@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/useStore';
 
-const isProd = import.meta.env.PROD;
-const LOCAL_DJANGO_URL = 'http://127.0.0.1:8000/api';
-const PROD_DJANGO_URL = 'https://crypto-pulse-web-app.onrender.com/api';
-
-const BASE_URL = isProd ? PROD_DJANGO_URL : LOCAL_DJANGO_URL;
+const BASE_URL = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000') + '/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
