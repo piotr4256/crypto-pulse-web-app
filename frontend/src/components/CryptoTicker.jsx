@@ -1,24 +1,19 @@
-import React, { useEffect } from 'react';
-import { useStore } from '../store/useStore';
+import React from 'react';
+import { useMarketQuery } from '../hooks/queries';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CryptoTicker = () => {
-  const { marketData, fetchMarketData } = useStore();
-  
-  useEffect(() => {
-    fetchMarketData();
-  }, [fetchMarketData]);
+  const { data: marketData = [] } = useMarketQuery();
 
   // Take top 20 for ticker
   const tickerData = marketData.slice(0, 20);
 
   if (tickerData.length === 0) return null;
 
-  if (tickerData.length === 0) return null;
-
   return (
-    <div className="w-full bg-crypto-card/80 backdrop-blur-sm border-b border-t border-gray-800/80 overflow-hidden flex items-center h-14 relative z-10">
+    <div className="w-full fixed top-16 left-0 bg-crypto-card/90 backdrop-blur-md border-b border-gray-800/50 overflow-hidden flex items-center h-14 z-40">
+
       
       {/* Container dla animacji (podwójny aby zlikwidować przerwę pod koniec) */}
       <div className="flex animate-marquee whitespace-nowrap group w-fit">

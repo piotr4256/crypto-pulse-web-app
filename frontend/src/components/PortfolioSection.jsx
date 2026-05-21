@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useStore } from '../store/useStore';
+import React, { useState, useEffect, useRef } from 'react';
+import { useMarketQuery } from '../hooks/queries';
 import { Link } from 'react-router-dom';
 import GlareHover from './GlareHover';
 
@@ -8,12 +8,12 @@ const TABS = ['Popularne', 'Nagrody', 'Stablecoiny', 'Ostatnio notowane'];
 const PortfolioSection = () => {
   const [activeTab, setActiveTab] = useState('Popularne');
   const [cryptos, setCryptos] = useState([]);
+  
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const containerRef = useRef(null);
+  const tabsRef = useRef({});
 
-  const { marketData, isLoading, fetchMarketData } = useStore();
-
-  useEffect(() => {
-    fetchMarketData();
-  }, [fetchMarketData]);
+  const { data: marketData = [], isLoading } = useMarketQuery();
 
   useEffect(() => {
     if (marketData.length > 0) {
@@ -31,21 +31,38 @@ const PortfolioSection = () => {
     }
   }, [marketData, activeTab]);
 
+  useEffect(() => {
+    const activeTabEl = tabsRef.current[activeTab];
+    if (activeTabEl && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const tabRect = activeTabEl.getBoundingClientRect();
+      setIndicatorStyle({
+        left: tabRect.left - containerRect.left,
+        width: tabRect.width
+      });
+    }
+  }, [activeTab]);
+
   return (
     <div className="w-full max-w-6xl mx-auto my-12 antialiased">
 
       {/* Tabs */}
-      <div className="w-full overflow-x-auto pb-4 mb-4 hide-scrollbar">
-        <div className="flex items-center sm:justify-center flex-nowrap gap-2 px-2 min-w-max">
+      <div className="w-full flex justify-center mb-8">
+        <div ref={containerRef} className="nav-pill-container">
+          <div 
+            className="nav-indicator" 
+            style={{ 
+              left: indicatorStyle.left, 
+              width: indicatorStyle.width,
+              opacity: 1
+            }} 
+          />
           {TABS.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`whitespace-nowrap px-5 sm:px-6 py-2.5 rounded-full font-medium transition-all duration-300 backdrop-blur-md outline-none
-                  ${activeTab === tab
-                  ? 'bg-crypto-primary/20 text-crypto-primary border border-crypto-primary shadow-[0_0_15px_rgba(0,212,255,0.4)]'
-                  : 'bg-crypto-card/50 text-gray-400 border border-transparent hover:text-white hover:bg-gray-800'
-                }`}
+              ref={el => tabsRef.current[tab] = el}
+              className={`nav-link-item ${activeTab === tab ? 'text-crypto-primary' : 'text-gray-400 hover:text-white'}`}
             >
               {tab}
             </button>

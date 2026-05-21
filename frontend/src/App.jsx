@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import CryptoDetailPage from './pages/CryptoDetailPage';
 import ExchangesPage from './pages/ExchangesPage';
 import TrendingPage from './pages/TrendingPage';
+import VerifyEmail from './pages/VerifyEmail';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/trending" element={<TrendingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
         </Routes>
       </Layout>
     </BrowserRouter>

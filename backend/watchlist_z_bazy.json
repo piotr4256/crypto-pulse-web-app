@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "user": 2,
+    "username": "piotr4256",
+    "coin_id": "bitcoin",
+    "added_at": "2026-04-13T18:37:58.820942Z"
+  },
+  {
+    "id": 2,
+    "user": 2,
+    "username": "piotr4256",
+    "coin_id": "ethereum",
+    "added_at": "2026-04-13T18:37:59.785334Z"
+  },
+  {
+    "id": 3,
+    "user": 2,
+    "username": "piotr4256",
+    "coin_id": "tether",
+    "added_at": "2026-04-13T18:38:00.386684Z"
+  },
+  {
+    "id": 4,
+    "user": 3,
+    "username": "piotr123",
+    "coin_id": "solana",
+    "added_at": "2026-04-15T13:52:19.341616Z"
+  },
+  {
+    "id": 5,
+    "user": 3,
+    "username": "piotr123",
+    "coin_id": "cardano",
+    "added_at": "2026-04-15T13:52:19.576826Z"
+  }
+]

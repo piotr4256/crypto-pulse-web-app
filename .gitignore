@@ -13,3 +13,11 @@ __pycache__/
 *.pyc
 db.sqlite3
 frontend/deployment_instructions.md
+
+# Project specific
+.agent/
+.venv/
+scratch/
+codebase_dump.txt
+frontend_codebase_dump.txt
+full_codebase_dump.txt

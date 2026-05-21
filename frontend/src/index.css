@@ -1,13 +1,178 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/geist";
 
-@layer base {
-  body {
-    @apply bg-crypto-bg text-gray-100 overflow-x-hidden w-full h-full;
+/* ─────────────────────────────────────────────────────────────────────────────
+   TAILWIND v4 THEME
+   Wszystkie tokeny kolorów, fontów i animacji definiowane tutaj.
+   Tailwind v4 czyta `--color-*`, `--font-*`, `--animate-*` z @theme.
+───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-sans: 'Geist Variable', sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* Custom crypto palette */
+  --color-crypto-bg: #050508;
+  --color-crypto-card: rgba(20, 20, 26, 0.7);
+  --color-crypto-card-solid: #14141a;
+  --color-crypto-green: #00ff88;
+  --color-crypto-green-glow: #00ff88aa;
+  --color-crypto-red: #ff0055;
+  --color-crypto-red-glow: #ff0055aa;
+  --color-crypto-primary: #00d4ff;
+  --color-crypto-primary-glow: #00d4ffaa;
+  --color-crypto-purple: #b026ff;
+  --color-crypto-purple-glow: #b026ffaa;
+  --color-crypto-yellow: #ffea00;
+  --color-crypto-yellow-glow: #ffea00aa;
+
+  /* Border radius */
+  --radius: 0.625rem;
+
+  /* Custom animations */
+  --animate-marquee: marquee 120s linear infinite;
+  --animate-pulse-neon: pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* Keyframes for custom animations */
+  @keyframes marquee {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes pulse-neon {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.7; }
   }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   TAILWIND v4 @theme inline
+   Mapuje shadcn CSS variables (--background, --primary, ...) na tokeny
+   Tailwinda. `inline` oznacza: nie generuj klas, tylko udostępnij vars.
+───────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-background:            var(--background);
+  --color-foreground:            var(--foreground);
+  --color-card:                  var(--card);
+  --color-card-foreground:       var(--card-foreground);
+  --color-popover:               var(--popover);
+  --color-popover-foreground:    var(--popover-foreground);
+  --color-primary:               var(--primary);
+  --color-primary-foreground:    var(--primary-foreground);
+  --color-secondary:             var(--secondary);
+  --color-secondary-foreground:  var(--secondary-foreground);
+  --color-muted:                 var(--muted);
+  --color-muted-foreground:      var(--muted-foreground);
+  --color-accent:                var(--accent);
+  --color-accent-foreground:     var(--accent-foreground);
+  --color-destructive:           var(--destructive);
+  --color-border:                var(--border);
+  --color-input:                 var(--input);
+  --color-ring:                  var(--ring);
+  --color-sidebar:               var(--sidebar);
+  --color-sidebar-foreground:    var(--sidebar-foreground);
+  --color-sidebar-primary:       var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:        var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:        var(--sidebar-border);
+  --color-sidebar-ring:          var(--sidebar-ring);
+  --color-chart-1:               var(--chart-1);
+  --color-chart-2:               var(--chart-2);
+  --color-chart-3:               var(--chart-3);
+  --color-chart-4:               var(--chart-4);
+  --color-chart-5:               var(--chart-5);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   shadcn CSS VARIABLES
+   Zwykłe CSS vars — shadcn/ui odczytuje je przez `var()` bezpośrednio
+───────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply overflow-x-hidden w-full h-full bg-crypto-bg text-white;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENT UTILITIES
+───────────────────────────────────────────────────────────────────────────── */
 @layer components {
   .btn-primary {
     @apply bg-crypto-primary/80 border border-crypto-primary hover:bg-crypto-primary/40 hover:shadow-[0_0_15px_rgba(0,212,255,0.5)] text-crypto-primary font-medium py-2 px-4 rounded-lg transition-all focus:ring-4 focus:ring-crypto-primary/50 outline-none;
@@ -17,11 +182,7 @@
     @apply w-full bg-crypto-card border border-crypto-primary/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:border-crypto-primary focus:ring-1 focus:ring-crypto-primary focus:shadow-[0_0_10px_rgba(0,212,255,0.3)] outline-none transition-all;
   }
 
-  .card {
-    @apply bg-crypto-card backdrop-blur-md border border-gray-800/80 rounded-xl shadow-[0_4_30px_rgba(0,0,0,0.5)];
-  }
-
-  /* Neon Effects */
+  /* Neon text effects */
   .text-glow-primary {
     text-shadow: 0 0 10px theme('colors.crypto-primary'), 0 0 20px theme('colors.crypto-primary-glow');
   }
@@ -34,6 +195,15 @@
     text-shadow: 0 0 10px theme('colors.crypto-red'), 0 0 20px theme('colors.crypto-red-glow');
   }
 
+  .text-glow-purple {
+    text-shadow: 0 0 10px theme('colors.crypto-purple'), 0 0 20px theme('colors.crypto-purple-glow');
+  }
+
+  .text-glow-yellow {
+    text-shadow: 0 0 10px theme('colors.crypto-yellow'), 0 0 20px theme('colors.crypto-yellow-glow');
+  }
+
+  /* Neon box effects */
   .box-glow-primary {
     box-shadow: 0 0 15px theme('colors.crypto-primary-glow');
   }
@@ -41,20 +211,36 @@
   .box-glow-purple {
     box-shadow: 0 0 15px theme('colors.crypto-purple-glow');
   }
+
+  /* Navbar pill container */
+  .nav-pill-container {
+    @apply relative flex items-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-1.5 py-1.5 shadow-2xl;
+  }
+
+  .nav-indicator {
+    @apply absolute rounded-full transition-all duration-300 ease-out bg-crypto-primary/20 border border-crypto-primary/30 shadow-[0_0_15px_rgba(0,212,255,0.3)];
+    z-index: 0;
+    height: calc(100% - 12px);
+    top: 6px;
+  }
+
+  .nav-link-item {
+    @apply relative z-10 px-5 py-2 rounded-full transition-colors duration-300 font-medium text-sm;
+  }
+
+  /* Legacy .card class — only used by TrendingPage & PortfolioSection (not shadcn <Card>) */
+  .card {
+    @apply bg-crypto-card backdrop-blur-md border border-gray-800/80 rounded-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+  }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   KEYFRAMES not in @theme (logo, bitcoin coin, activity pulse)
+───────────────────────────────────────────────────────────────────────────── */
 @keyframes logo-flip {
-  0% {
-    transform: rotateY(0deg);
-  }
-
-  50% {
-    transform: rotateY(90deg);
-  }
-
-  100% {
-    transform: rotateY(0deg);
-  }
+  0%   { transform: rotateY(0deg); }
+  50%  { transform: rotateY(90deg); }
+  100% { transform: rotateY(0deg); }
 }
 
 .animate-logo-flip {
@@ -62,25 +248,10 @@
 }
 
 @keyframes bitcoin-coin-spin {
-  0% {
-    transform: rotateY(0deg) scale(1);
-    filter: drop-shadow(0 0 0px #f7931a);
-  }
-
-  30% {
-    transform: rotateY(180deg) scale(1.2);
-    filter: drop-shadow(0 0 8px #f7931a);
-  }
-
-  70% {
-    transform: rotateY(360deg) scale(1.2);
-    filter: drop-shadow(0 0 8px #f7931a);
-  }
-
-  100% {
-    transform: rotateY(540deg) scale(1);
-    filter: drop-shadow(0 0 0px #f7931a);
-  }
+  0%   { transform: rotateY(0deg) scale(1);    filter: drop-shadow(0 0 0px #f7931a); }
+  30%  { transform: rotateY(180deg) scale(1.2); filter: drop-shadow(0 0 8px #f7931a); }
+  70%  { transform: rotateY(360deg) scale(1.2); filter: drop-shadow(0 0 8px #f7931a); }
+  100% { transform: rotateY(540deg) scale(1);   filter: drop-shadow(0 0 0px #f7931a); }
 }
 
 .animate-bitcoin-coin {
@@ -88,17 +259,8 @@
 }
 
 @keyframes pulse-activity {
-
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.7;
-    transform: scale(1.1);
-  }
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.1); }
 }
 
 .animate-activity-pulse {

@@ -1,0 +1,51 @@
+# === BACKEND (PYTHON/DJANGO) REQUIREMENTS ===
+# Instrukcja: pip install -r requirements.txt (wewnątrz folderu backend lub aktywowanego venv)
+Django>=5.0.0
+djangorestframework
+django-cors-headers
+requests
+drf-spectacular
+gunicorn
+whitenoise[brotli]
+python-dotenv
+psycopg2-binary
+dj-database-url
+django-unfold
+djangorestframework-simplejwt
+
+# === FRONTEND (NODE.JS/REACT) REQUIREMENTS ===
+# Zależności frontendowe są zarządzane przez npm. 
+# Aby je zainstalować, wykonaj: npm install --prefix frontend
+#
+# Lista głównych zależności (z package.json):
+# - @base-ui/react
+# - @fontsource-variable/geist
+# - @radix-ui/react-icons
+# - @tanstack/react-query
+# - @tanstack/react-query-devtools
+# - @tanstack/react-table
+# - axios
+# - class-variance-authority
+# - clsx
+# - date-fns
+# - lucide-react
+# - ogl
+# - react
+# - react-dom
+# - react-router-dom
+# - recharts
+# - tailwind-merge
+# - three
+# - tw-animate-css
+# - usehooks-ts
+# - zustand
+#
+# Lista zależności deweloperskich:
+# - @tailwindcss/vite
+# - @types/react
+# - @types/react-dom
+# - @vitejs/plugin-react
+# - eslint (oraz pluginy)
+# - postcss
+# - tailwindcss
+# - vite
