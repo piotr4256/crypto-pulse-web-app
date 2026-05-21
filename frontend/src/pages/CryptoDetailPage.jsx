@@ -13,7 +13,7 @@ const CryptoDetailPage = () => {
   const { user } = useAuthStore();
   const { data: marketData = [], isLoading: isMarketLoading } = useMarketQuery();
   const { data: watchlist = [] } = useWatchlistQuery(user);
-  const toggleMutation = useToggleWatchlistMutation();
+  const toggleMutation = useToggleWatchlistMutation(user);
   const [timeframe, setTimeframe] = useState(7);
 
   // Coin lookup from cached market data

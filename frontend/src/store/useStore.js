@@ -1,50 +1,31 @@
 import { create } from 'zustand';
-
-const getInitialUser = () => {
-  try {
-    const userStr = localStorage.getItem('crypto_pulse_user');
-    if (!userStr || userStr === 'undefined') return null;
-    return JSON.parse(userStr);
-  } catch (error) {
-    console.error('Błąd parsowania użytkownika z localStorage:', error);
-    return null;
-  }
-};
-
-const getInitialToken = () => {
-  const token = localStorage.getItem('crypto_pulse_token');
-  if (!token || token === 'undefined') return null;
-  return token;
-};
+import { persist } from 'zustand/middleware';
 
 /**
  * useAuthStore — slim Zustand store TYLKO dla auth state.
- * Token trzymany w pamięci (nie czytamy z localStorage przy każdym requeście).
- * Wszystkie dane z API zarządzane są przez TanStack Query w src/hooks/queries.js.
+ * Middleware `persist` automatycznie synchronizuje stan z localStorage
+ * pod kluczem 'crypto_pulse_auth' — eliminuje ręczne getItem/setItem/removeItem.
+ * Token dostępny synchronicznie przez useAuthStore.getState().token (używane w apiService.js).
  */
-export const useAuthStore = create((set) => ({
-  user: getInitialUser(),
-  token: getInitialToken(),
+export const useAuthStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
 
-  setUser: (user, token) => {
-    if (user) {
-      localStorage.setItem('crypto_pulse_user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('crypto_pulse_user');
+      setUser: (user, token) => set({
+        user: user || null,
+        token: token || null,
+      }),
+
+      logout: () => set({ user: null, token: null }),
+    }),
+    {
+      name: 'crypto_pulse_auth', // klucz w localStorage
+      partialize: (state) => ({  // persystuj TYLKO dane, nie funkcje
+        user: state.user,
+        token: state.token,
+      }),
     }
-
-    if (token) {
-      localStorage.setItem('crypto_pulse_token', token);
-    } else {
-      localStorage.removeItem('crypto_pulse_token');
-    }
-
-    set({ user: user || null, token: token || null });
-  },
-
-  logout: () => {
-    localStorage.removeItem('crypto_pulse_token');
-    localStorage.removeItem('crypto_pulse_user');
-    set({ user: null, token: null });
-  },
-}));
+  )
+);

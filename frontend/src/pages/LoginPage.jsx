@@ -22,7 +22,7 @@ const LoginPage = () => {
     loginMutation.mutate({ username, password }, {
       onSuccess: (data) => {
         setUser(data.user, data.token);
-        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.watchlist });
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.watchlist(data.user?.id) });
         navigate('/');
       },
     });

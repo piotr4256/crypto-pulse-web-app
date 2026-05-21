@@ -8,7 +8,7 @@ export const QUERY_KEYS = {
   exchanges: ['exchanges'],
   trending: ['trending'],
   globalStats: ['globalStats'],
-  watchlist: ['watchlist'],
+  watchlist: (userId) => ['watchlist', userId],
   coinChart: (id, days) => ['coinChart', id, days],
 };
 
@@ -62,7 +62,7 @@ export const useGlobalStatsQuery = () =>
 // ─── Watchlist ────────────────────────────────────────────────────────────────
 export const useWatchlistQuery = (user) =>
   useQuery({
-    queryKey: QUERY_KEYS.watchlist,
+    queryKey: QUERY_KEYS.watchlist(user?.id),
     queryFn: async () => {
       const res = await apiService.getUserWatchlist();
       return res.data; // string[] z coin_id
@@ -71,8 +71,9 @@ export const useWatchlistQuery = (user) =>
     staleTime: 2 * 60_000,
   });
 
-export const useToggleWatchlistMutation = () => {
+export const useToggleWatchlistMutation = (user) => {
   const queryClient = useQueryClient();
+  const watchlistKey = QUERY_KEYS.watchlist(user?.id);
   return useMutation({
     mutationFn: async ({ cryptoId, isFaved }) => {
       if (isFaved) {
@@ -83,10 +84,10 @@ export const useToggleWatchlistMutation = () => {
     },
     // Optimistic update — natychmiast aktualizuje UI bez czekania na serwer
     onMutate: async ({ cryptoId, isFaved }) => {
-      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.watchlist });
-      const previous = queryClient.getQueryData(QUERY_KEYS.watchlist) ?? [];
+      await queryClient.cancelQueries({ queryKey: watchlistKey });
+      const previous = queryClient.getQueryData(watchlistKey) ?? [];
       queryClient.setQueryData(
-        QUERY_KEYS.watchlist,
+        watchlistKey,
         isFaved ? previous.filter(id => id !== cryptoId) : [...previous, cryptoId]
       );
       return { previous };
@@ -94,12 +95,12 @@ export const useToggleWatchlistMutation = () => {
     // Rollback przy błędzie
     onError: (_, __, ctx) => {
       if (ctx?.previous) {
-        queryClient.setQueryData(QUERY_KEYS.watchlist, ctx.previous);
+        queryClient.setQueryData(watchlistKey, ctx.previous);
       }
     },
     // Zawsze resynkronizuj z serwerem po zakończeniu
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.watchlist });
+      queryClient.invalidateQueries({ queryKey: watchlistKey });
     },
   });
 };

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/useStore';
 import { Activity, LogOut, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Bitcoin SVG icon as a component
 const BitcoinIcon = ({ size = 24, className = '' }) => (
@@ -15,6 +16,7 @@ const BitcoinIcon = ({ size = 24, className = '' }) => (
 
 const Navbar = () => {
   const { user, logout } = useAuthStore();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -61,6 +63,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    queryClient.clear(); // Wyczyść CAŁY cache — dane poprzedniego usera nie wyciekną do nowego
     navigate('/login');
     setIsMobileMenuOpen(false);
   };

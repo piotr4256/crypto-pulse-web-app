@@ -53,7 +53,7 @@ const MarketPage = () => {
   const { user } = useAuthStore();
   const { data: cryptos = [], isLoading: loading, error: queryError } = useMarketQuery();
   const { data: watchlist = [] } = useWatchlistQuery(user);
-  const toggleMutation = useToggleWatchlistMutation();
+  const toggleMutation = useToggleWatchlistMutation(user);
   const navigate = useNavigate();
 
   const error = queryError?.message;
