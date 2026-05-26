@@ -22,6 +22,8 @@ const LoginPage = () => {
     loginMutation.mutate({ username, password }, {
       onSuccess: (data) => {
         setUser(data.user, data.token);
+        // invalidacja cache (TanStack Query): oznaczamy dane watchlisty tego usera jako "przestarzałe".
+        // Dzięki temu, gdy użytkownik wejdzie na stronę ulubionych, aplikacja sama pobierze świeże dane z backendu.
         queryClient.invalidateQueries({ queryKey: QUERY_KEYS.watchlist(data.user?.id) });
         navigate('/');
       },
