@@ -1,3 +1,6 @@
+/**
+ * Konfiguracja ESLint — narzędzia do statycznej analizy i sprawdzania jakości kodu JS/React.
+ */
 module.exports = {
   env: { browser: true, es2021: true },
   extends: [

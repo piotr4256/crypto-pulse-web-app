@@ -5,23 +5,27 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import App from './App.jsx'
 import './index.css'
 
+// Inicjalizacja klienta TanStack Query z konfiguracją globalną
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Ponów request 1 raz przed pokazaniem błędu (domyślnie 3)
-      retry: 1,
-      // refetchOnWindowFocus: true (domyślne) — krypto to live market!
-      // staleTime w każdym query chroni przed rate limitami:
-      // jeśli dane są świeże, TanStack Query NIE wyśle nowego requesta po focus.
+      retry: 1, // Ponów nieudane zapytanie HTTP tylko raz (zamiast domyślnych 3), oszczędzając limit API
     },
   },
 });
 
+// Renderowanie aplikacji React bezpośrednio w elemencie <div id="root"> w index.html
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    {/* Uruchomienie QueryClientProvider, aby cała aplikacja miała dostęp do cache zapytań */}
     <QueryClientProvider client={queryClient}>
+
+      {/* Główny komponent z systemem routingu */}
       <App />
+
+      {/* Deweloperski panel kontrolny TanStack Query (widoczny tylko lokalnie podczas pracy) */}
       <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+
     </QueryClientProvider>
   </React.StrictMode>,
 )

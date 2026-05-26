@@ -1,8 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../api/apiService';
 
-// ─── Query Keys ───────────────────────────────────────────────────────────────
-// Centralizacja kluczy cache — ułatwia invalidation i refetch
+// Query Keys
+// kazde zapytanie do backendu ma swoj klucz cache
+// Zapytania useQuery - pobieranie danych (GET)
+// Mutacje useMutation - modyfikacja danych (POST, DELETE, PUT)
+// dane zaladowane do RAM 
 export const QUERY_KEYS = {
   markets: ['markets'],
   exchanges: ['exchanges'],
@@ -12,7 +15,7 @@ export const QUERY_KEYS = {
   coinChart: (id, days) => ['coinChart', id, days],
 };
 
-// ─── Market Data ──────────────────────────────────────────────────────────────
+// Market Data
 export const useMarketQuery = () =>
   useQuery({
     queryKey: QUERY_KEYS.markets,
@@ -20,12 +23,12 @@ export const useMarketQuery = () =>
       const res = await apiService.getAllCryptos();
       return res.data;
     },
-    staleTime: 60_000,      // dane świeże przez 1 minutę
+    staleTime: 60_000,      // czas swiezosci danych, przez ten czas aplikacja nie pobierze nowcyh danych
     gcTime: 5 * 60_000,  // cache żyje 5 minut po ostatnim użyciu
-    refetchInterval: 30_000, // Automatyczne odświeżanie co 30 sekund
+    refetchInterval: 30_000, // autoodswiezanie
   });
 
-// ─── Exchanges ────────────────────────────────────────────────────────────────
+// Exchanges
 export const useExchangesQuery = () =>
   useQuery({
     queryKey: QUERY_KEYS.exchanges,
@@ -37,7 +40,7 @@ export const useExchangesQuery = () =>
     gcTime: 10 * 60_000,
   });
 
-// ─── Trending ─────────────────────────────────────────────────────────────────
+// Trending
 export const useTrendingQuery = () =>
   useQuery({
     queryKey: QUERY_KEYS.trending,
@@ -48,7 +51,7 @@ export const useTrendingQuery = () =>
     staleTime: 5 * 60_000,
   });
 
-// ─── Global Stats ─────────────────────────────────────────────────────────────
+// Global Stats
 export const useGlobalStatsQuery = () =>
   useQuery({
     queryKey: QUERY_KEYS.globalStats,
@@ -59,7 +62,7 @@ export const useGlobalStatsQuery = () =>
     staleTime: 5 * 60_000,
   });
 
-// ─── Watchlist ────────────────────────────────────────────────────────────────
+// Watchlist
 export const useWatchlistQuery = (user) =>
   useQuery({
     queryKey: QUERY_KEYS.watchlist(user?.id),
@@ -67,10 +70,12 @@ export const useWatchlistQuery = (user) =>
       const res = await apiService.getUserWatchlist();
       return res.data; // string[] z coin_id
     },
-    enabled: !!user,    // fetch tylko gdy user jest zalogowany
+    enabled: !!user,    // blokuje zapytanie, dopóki user nie jest zalogowany
     staleTime: 2 * 60_000,
   });
 
+
+//mutacja do usuwania/dodawania do listy obserwowanych
 export const useToggleWatchlistMutation = (user) => {
   const queryClient = useQueryClient();
   const watchlistKey = QUERY_KEYS.watchlist(user?.id);
@@ -83,6 +88,8 @@ export const useToggleWatchlistMutation = (user) => {
       }
     },
     // Optimistic update — natychmiast aktualizuje UI bez czekania na serwer
+    // zmieniamy kolor gwiazdki zanim backend odpowie
+    // zapisujemy w pamieci podręcznej co bylo przed zmiana
     onMutate: async ({ cryptoId, isFaved }) => {
       await queryClient.cancelQueries({ queryKey: watchlistKey });
       const previous = queryClient.getQueryData(watchlistKey) ?? [];
@@ -93,19 +100,20 @@ export const useToggleWatchlistMutation = (user) => {
       return { previous };
     },
     // Rollback przy błędzie
+    // cofamy do stanu sprzed mutacji
     onError: (_, __, ctx) => {
       if (ctx?.previous) {
         queryClient.setQueryData(watchlistKey, ctx.previous);
       }
     },
-    // Zawsze resynkronizuj z serwerem po zakończeniu
+    // sprawdzenie czy na pewno jest zsynchronizowane z serwerem
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: watchlistKey });
     },
   });
 };
 
-// ─── Coin Chart ───────────────────────────────────────────────────────────────
+// Coin Chart
 export const useCoinChartQuery = (id, days) =>
   useQuery({
     queryKey: QUERY_KEYS.coinChart(id, days),
@@ -117,19 +125,21 @@ export const useCoinChartQuery = (id, days) =>
     staleTime: 5 * 60_000,
   });
 
-// ─── Auth Mutations ───────────────────────────────────────────────────────────
+// Auth Mutations
+// Mutacja logowania — wywoływana ręcznie z formularza logowania
 export const useLoginMutation = () =>
   useMutation({
     mutationFn: async ({ username, password }) => {
       const res = await apiService.login(username, password);
-      return res.data; // { user, token }
+      return res.data; // Zwraca { user, token } z backendu w razie sukcesu
     },
   });
 
+// Mutacja rejestracji — wywoływana ręcznie z formularza rejestracji
 export const useRegisterMutation = () =>
   useMutation({
     mutationFn: async ({ username, email, password }) => {
       const res = await apiService.register(username, email, password);
-      return res.data; // { user, token }
+      return res.data; // Zwraca { user, token } z backendu w razie sukcesu
     },
   });
